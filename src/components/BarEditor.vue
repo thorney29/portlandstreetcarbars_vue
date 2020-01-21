@@ -1,0 +1,281 @@
+<template>
+    <form @submit.prevent="save">
+			<div class="form-group">
+				<label for="bar_title">Title:</label>
+				<input
+				v-model="form.title"
+				type="text"
+				id="bar_title"
+				class="form-input"
+				name="title">
+			</div>
+			<div class="form-group">
+				<label for="bar_image">Image:</label>
+				<input
+				v-model="form.image"
+				type="text"
+				id="bar_image"
+				class="form-input"
+				name="image">
+			</div>
+			<div class="form-group">
+				<label for="bar_address">Address:</label>
+				<input
+				v-model="form.address"
+				type="text"
+				id="bar_address"
+				class="form-input"
+				name="address">
+			</div>
+			<div class="form-group">
+				<label for="bar_directionsUrl">Directions URL:</label>
+				<input
+				v-model="form.directionsUrl"
+				type="text"
+				id="bar_directionsUrl"
+				class="form-input"
+				name="directionsUrl">
+			</div>
+			<div class="form-group">
+				<label for="bar_notes">Notes:</label>
+				<input
+				v-model="form.notes"
+				type="text"
+				id="bar_notes"
+				class="form-input"
+				name="notes">
+			</div>
+			<div class="form-group">
+				<label for="bar_text">Text:</label>
+				<input
+				v-model="form.text"
+				type="text"
+				id="bar_text"
+				class="form-input"
+				name="text">
+			</div>
+			<hr>
+			<div class='form-group'>
+			  <label for="bar_icon">Add/Edit Icons:</label>
+			  <input type="checkbox" id="beer" :value="beer" v-model="form.icons.key1"  true-value="beer" false-value="null">
+			  <label for="beer">brewery</label>
+			  <input type="checkbox" id="glass-cheers" :value="glass-cheers" v-model="form.icons.key9"  true-value="glass-cheers" false-value="null">
+			  <label for="glass-cheers">craft beer</label>
+			  <input type="checkbox" id="biking" value="biking" v-model="form.icons.key2" true-value="biking" false-value="null">
+			  <label for="biking">bike parking</label>
+			   <input type="checkbox" id="cocktail" value="cocktail" v-model="form.icons.key3" true-value="cocktail" false-value="null">
+			  <label for="cocktail">cocktails</label>
+			  <input type="checkbox" id="utensils" value="utensils" v-model="form.icons.key4" true-value="utensils" false-value="null">
+			  <label for="utensils">food</label>
+			  <input type="checkbox" id="dice" value="dice" v-model="form.icons.key5" true-value="dice" false-value="null">
+			  <label for="dice">games</label>
+			  <input type="checkbox" id="music" value="music" v-model="form.icons.key6" true-value="music" false-value="null">
+			  <label for="music">music</label>
+			   <input type="checkbox" id="umbrella-beach" value="umbrella-beach" v-model="form.icons.key7" true-value="umbrella-beach" false-value="null">
+			  <label for="umbrella-beach">patio</label>
+			   <input type="checkbox" id="wine-glass-alt" value="wine-glass-alt" v-model="form.icons.key8"  true-value="wine-glass-alt" false-value="null">
+			  <label for="wine-glass-alt">wine</label>
+			   <input type="checkbox" id="football-ball" value="football-ball" v-model="form.icons.key10"  true-value="football-ball" false-value="null">
+			  <label for="football-ball">sports</label>
+			  <br>
+			  <span>Checked icons: {{ form.icons }}</span>
+			</div>
+			<hr>
+			<div class='form-group'>
+			  <label for="bar_typeIds">Add/Edit Types:</label>
+			  <input type="checkbox" id="brewery" :value="brewery" v-model="form.typeIds.brewery"  true-value="brewery" false-value="null">
+			  <label for="brewery">brewery</label>
+			  <input type="checkbox" id="craftbeer" value="craftbeer" v-model="form.typeIds.craftbeer" true-value="craftbeer" false-value="null">
+			  <label for="craftbeer">craft beer</label>
+			  <input type="checkbox" id="bikeparking" value="bikeparking" v-model="form.typeIds.bikeparking" true-value="bikeparking" false-value="null">
+			  <label for="bikeparking">bike parking</label>
+			   <input type="checkbox" id="cocktails" value="cocktails" v-model="form.typeIds.cocktails" true-value="cocktails" false-value="null">
+			  <label for="cocktails">cocktails</label>
+			  <input type="checkbox" id="food" value="food" v-model="form.typeIds.food" true-value="food" false-value="null">
+			  <label for="food">food</label>
+			    <input type="checkbox" id="games" value="games" v-model="form.typeIds.games" true-value="games" false-value="null">
+			  <label for="games">games</label>
+			    <input type="checkbox" id="music" value="music" v-model="form.typeIds.music" true-value="music" false-value="null">
+			  <label for="music">music</label>
+			  <input type="checkbox" id="outdoorseating" value="outdoorseating" v-model="form.typeIds.outdoorseating" true-value="outdoorseating" false-value="null">
+			  <label for="outdoorseating">outdoor seating</label>
+			  <input type="checkbox" id="wine" value="wine" v-model="form.typeIds.wine"  true-value="wine" false-value="null">
+			  <label for="wine">wine</label>
+			  <input type="checkbox" id="sports" value="sports" v-model="form.typeIds.sports" true-value="sports" false-value="null">
+			  <label for="sports">sports</label>
+			  <br>
+			  <span>Checked Types: {{ form.typeIds }}</span>
+			</div>
+			<div class="hidden">
+				<div class="form-group">
+					<label for="bar_favoriteValue">favoriteValue:</label>
+					<input
+					v-model="form.favoriteValue"
+					value=""
+					type="text"
+					id="bar_favoriteValue"
+					class="form-input"
+					name="favoriteValue">
+				</div>
+				<div class="form-group">
+					<label for="bar_toGoValue">toGoValue:</label>
+					<input
+					v-model="form.toGoValue"
+					type="text"
+					id="bar_toGoValue"
+					class="form-input"
+					name="toGoValue">
+				</div>
+			</div>
+			<div class="btn-group">
+				<button  v-if="isUpdate" @click.prevent="cancel" class="btn btn-ghost">Cancel</button>
+				<button class="btn btn-blue" type="submit" name="Publish">{{isUpdate ? 'Update' : 'Publish'}}
+				</button>
+			</div>
+		</form>
+</template>
+<script>
+	export default {
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			image: {
+				type: String,
+				default: ''
+			},
+			address: {
+				type: String,
+				default: ''
+			},
+			directionsUrl: {
+				type: String,
+				default: ''
+			},
+			notes: {
+				type: String,
+				default: ''
+			},
+			favoriteValue: {
+				type: Boolean,
+				default: false
+			},
+			toGoValue: {
+				type: Boolean,
+				default: false
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			beer: {
+				type: Boolean,
+				default: false
+			},
+			brewery: {
+				type: Boolean,
+				default: false
+			},
+			cheers: {
+				type: Boolean,
+				default: false
+			},
+			games: {
+				type: Boolean,
+				default: false
+			},
+			glass: {
+				type: Boolean,
+				default: false
+			},
+			craftbeer: {
+				type: Boolean,
+				default: false
+			},
+			music: {
+				type: Boolean,
+				default: false
+			},
+			outdoorseating: {
+				type: Boolean,
+				default: false
+			},
+			sports: {
+				type: Boolean,
+				default: false
+			},
+			icons: {
+				type: Object,
+				default: () => ({
+					key1: 'null',
+					key2: 'null',
+					key3: 'null',
+					key4: 'null',
+					key5: 'null',
+					key6: 'null',
+					key7: 'null',
+					key8: 'null',
+					key9: 'null',
+					key10: 'null'
+				})
+			},
+			typeIds: {
+				type: Object,
+				default: () => ({
+					bikeparking: 'null',
+					brewery: 'null',
+					cocktails: 'null',
+					craftbeer: 'null',
+					games: 'null',
+					food: 'null',
+					music: 'null',
+					outdoorseating: 'null',
+					sports: 'null',
+					wine: 'null'
+				})
+			}
+		},
+		data () {
+			return {
+				form: {
+					title: this.title,
+					image: this.image,
+					address: this.address,
+					directionsUrl: this.directionsUrl,
+					icons: this.icons,
+					typeIds: this.typeIds,
+					notes: this.notes,
+					text: this.text,
+					favoriteValue: this.favoriteValue,
+					toGoValue: this.toGoValue
+				}
+			}
+		},
+		computed: {
+			isUpdate () {
+				return !!this.title
+			}
+		},
+		methods: {
+			save () {
+				this.$emit('save', {
+					title: this.form.title,
+					image: this.form.image,
+					address: this.form.address,
+					directionsUrl: this.form.directionsUrl,
+					icons: this.form.icons,
+					typeIds: this.form.typeIds,
+					notes: this.form.notes,
+					text: this.form.text
+				})
+			},
+			cancel () {
+				this.$emit('cancel')
+			}
+		}
+	}
+</script>
+<style scoped>
+
+</style>

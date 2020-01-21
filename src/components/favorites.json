@@ -1,0 +1,111 @@
+{
+  "bars" : {
+    "-KvcwywxaxxIfsHR88wa" : {
+      "address" : "928 SE 9th Ave, Portland, OR 97214, United States",
+      "contributors" : {
+        "L664y3qZSubDbT1R6npC0EEybJ73" : "L664y3qZSubDbT1R6npC0EEybJ73",
+        "ppUrr4k6FRYzOY0om0Srze8NNk33" : "ppUrr4k6FRYzOY0om0Srze8NNk33"
+      },
+      "favorites" : {
+        "-LspNCODe8qC2zIiCAvF" : "-LspNCODe8qC2zIiCAvF"
+      },
+      "firstFavoriteId" : "-LsUQ0j5PiJtkN9Cq5z8",
+      "icons" : {
+        "key1" : "beer",
+        "key2" : "null",
+        "key3" : "hamburger",
+        "key4" : "biking",
+        "key5" : "umbrella-beach",
+        "key6" : "music"
+      },
+      "image" : "https://portlandstreetcarbars.com/images/bars/green-dragon.jpg",
+      "lastFavoriteAt" : 1507198435,
+      "lastFavoriteId" : "-Kvg0kUf4Bg7zzeKzDdU",
+      "notes" : "Social atmostphere, good for groups",
+      "publishedAt" : 1507146852,
+      "slug" : "green-dragon-bistro-and-brew",
+      "text" : "Here is some text.",
+      "title" : "Rogue Eastside Pub & Pilot Brewery",
+      "typeId" : "-KpOx5Y4AqRr3sB4Ybwj",
+      "userId" : "ppUrr4k6FRYzOY0om0Srze8NNk33"
+    },
+    "-LsUQ0j4xi3X8YgEUUjK" : {
+      "address" : "939 Southeast Belmont Street",
+      "contributors" : {
+        "ZNnGzjJ1jEO6wEimU68qlHJIR573" : "ZNnGzjJ1jEO6wEimU68qlHJIR573"
+      },
+      "favorites" : {
+        "-LsUQ0j5PiJtkN9Cq5z8" : "-LsUQ0j5PiJtkN9Cq5z8"
+      },
+      "firstFavoriteId" : "-LsUQ0j5PiJtkN9Cq5z8",
+      "icons" : {
+        "key1" : "beer",
+        "key3" : "hamburger"
+      },
+      "image" : "https://portlandstreetcarbars.com/images/bars/cascade-barrel.jpg",
+      "notes" : "A must visit for anyone who loves sour beers.",
+      "publishedAt" : 1572485209,
+      "text" : "Brewery",
+      "title" : "Cascade Brewing",
+      "typeId" : "-KpOx5Y4AqRr3sB4Ybwj",
+      "userId" : "ppUrr4k6FRYzOY0om0Srze8NNk33"
+    }
+  },
+  "favorites" : {
+    "-LspNCODe8qC2zIiCAvF" : {
+      "barId" : "-KvcwywxaxxIfsHR88wa",
+      "favoriteValue" : "false",
+      "goToValue" : "false", 
+      "publishedAt" : 1572853569,
+      "text" : "I love this place",
+      "userId" : "ppUrr4k6FRYzOY0om0Srze8NNk33"
+    },
+    "-LsUQ0j5PiJtkN9Cq5z8": {
+      "barId": "-LsUQ0j4xi3X8YgEUUjK",
+      "favoriteValue": "false",
+      "goToValue": "false",
+      "publishedAt": 1572853569,
+      "text": "I love this place",
+      "userId": "ppUrr4k6FRYzOY0om0Srze8NNk33"
+    }
+  },
+  "types" : {
+    "-KpOx5Y4AqRr3sB4Ybwj" : {
+      "bars" : {
+        "-LsUQ0j4xi3X8YgEUUjK" : "-LsUQ0j4xi3X8YgEUUjK",
+        "-KvcwywxaxxIfsHR88wa" : "-KvcwywxaxxIfsHR88wa"
+      },
+      "categoryId" : "-KpR7vRkiRPpbUd_TVAR",
+      "description" : "Bars with focus on beer",
+      "icon" : "beer",
+      "lastFavoriteId" : "-KxxU6bYWl-6Xnu9g-56",
+      "name" : "Beers on Tap",
+      "slug" : "beers-on-tap"
+    }
+  },
+  "categories" : {
+    "-KpR7vRkiRPpbUd_TVAR" : {
+    "name" : "Find Beer",
+    "slug" : "beer",
+    "types" : {
+      "-KpOx5Y4AqRr3sB4Ybwj" : "-KpOx5Y4AqRr3sB4Ybwj"
+      }
+    }
+  },
+  "users" : {
+    "ppUrr4k6FRYzOY0om0Srze8NNk33" : {
+      "avatar" : "https://lh3.googleusercontent.com/a-/AAuE7mDyVp2VKWQYJVX-j2nrk4mC-9Dth9qz-BV3cs3nLXs",
+      "bars" : {
+        "-KvcwywxaxxIfsHR88wa" : "-KvcwywxaxxIfsHR88wa"
+      },
+      "email" : "tresa.e@gmail.com",
+      "favorites" : {
+        "-LspNCODe8qC2zIiCAvF" : "-LspNCODe8qC2zIiCAvF"
+      },
+      "name" : "Tresa Horney",
+      "registeredAt" : 1572293976,
+      "username" : "tresa.e@gmail.com",
+      "usernameLower" : "tresa.e@gmail.com"
+    }
+  }
+}

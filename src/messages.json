@@ -1,0 +1,87 @@
+{
+    "favorites" : {
+        "-LlkdsXx_jUWUXDIVDlR" : {
+          "userId" : "",
+          "barId": "",
+          "fave": "yes"
+        },
+        "-L8HkXz1C1Xppr9WLdE" : {
+          "userId" : "",
+          "barId": "",
+          "fave": "yes"
+        },
+        "-L8HkY9UXtLTRoGfnZcTZ" : {
+          "userId" : "",
+          "barId": "L8HkYMfiiEE0sQvBhtv",
+          "fave": "no"
+        },
+        "-MLKkYMfiiEE0sQvBhJl" : {
+          "userId" : "",
+          "barId": "-M8HkYMfiiEE0sQvBhJl",
+          "fave": "no"
+        }
+    },
+    "messages" : {
+        "-L8HkVXx_jUWUXDIVDlR" : {
+          "text" : "Hey",
+          "nickname": "guybrush",
+          "fave": "yes"
+        },
+        "-L8HkXz1C1Xyr9r9WLdE" : {
+          "text" : "Hi, what's your name?",
+          "nickname": "pirate1861",
+          "fave": "yes"
+        },
+        "-L8HkY9UXtLTRoGfnZr8" : {
+          "text" : "My name is Guybrush Threepwood",
+          "nickname": "guybrush",
+          "fave": "no"
+        },
+        "-L8HkYMfiiEE0sQvBhJl" : {
+          "text" : "Guybrush Threepwood? That's the most ridiculous name I’ve ever heard!",
+          "nickname": "pirate1861",
+          "fave": "no"
+        }
+    },
+    "bars": {
+        "-M8HkYMfiiEE0sQvBhJl": {
+          "markerId": 0,
+          "name": "Ambonnay Champagne Bar",
+          "url": "http://www.ambonnaybar.com/",
+          "type": "Wine Bar",
+          "address": "107 SE Washington St",
+          "city": "Portland",
+          "state": "OR",
+          "image": "https://portlandstreetcarbars.com/images/bars/ambonnay.jpg",
+          "lat": 45.518814,
+          "lng": -122.664587,
+          "features": "<span class='chip'>drinks<i class='material-icons'>local_bar</i></span>"
+        },
+        "-L8HkYMfiiEE0sQvBhtv": {
+          "markerId": 1,
+          "name": "B Side Tavern",
+          "url": "https://www.facebook.com/pages/B-Side-Tavern/285188399929",
+          "type": "Bar",
+          "address": "632 E Burnside St",
+          "city": "Portland",
+          "state": "OR",
+          "image": "https://portlandstreetcarbars.com/images/bars/b-side-tavern.jpg",
+          "lat": 45.522739,
+          "lng": -122.658929,
+          "features": "<span class='chip'>beers<i class='material-icons'>local_drink</i></span><span class='chip'>food<i class='material-icons'>local_dining</i></span>"
+        },
+        "-P8HkYMfiiEE0sQvBhtv": {
+          "markerId": 2,
+          "name": "Bunk Bar",
+          "url": "http://www.bunksandwiches.com/bunkbar/",
+          "type": "Bar",
+          "address": "1028 Southeast Water Avenue #130",
+          "city": "Portland",
+          "state": "OR",
+          "image": "https://portlandstreetcarbars.com/images/bars/bunk.jpg",
+          "lat": 45.515332,
+          "lng": -122.665569,
+          "features": "<span class='chip'>beers<i class='material-icons'>local_drink</i></span><span class='chip'>drinks<i class='material-icons'>local_bar</i></span><span class='chip'>food<i class='material-icons'>local_dining</i></span>"
+        }
+    }
+} 
