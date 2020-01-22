@@ -16,23 +16,24 @@
 			<img class="card-img-top" :src="bar.image" alt="Card image cap">
 
 			 	<ul class="icons">
-						  <template 
-						  v-for="(item, key, index) in bar.icons">
-						  	<li style="" 
-						  	v-for="type in types"  
-						  	 v-if="item == type.icon">
-						  		<span>
-						  		  <router-link 
-						            class="type-name"
-						            :title="type.description"
-						            :to="{name: 'PageType', params: {id : type['.key']}}"> 
-						            <i class="fas fa-item">{{ item }}</i> 
-						            </router-link>
-						  		</span> 
-						  		
-						  	</li>
-						  </template>
-						</ul>
+					<template
+					  v-for="(typeId, key, index) in bar.typeIds">
+					  	<li style="" 
+					  	v-if="typeId !== 'null'">
+					  	<!-- {{typeId}} -->
+					  	<template v-for="item in types">	
+					  	  <span v-if="item.name === typeId">
+					  	  	 <router-link 
+					            class="type-name" 
+					            :title="item.description"
+					            :to="{name: 'PageType', params: {id : item['.key']}}"> 
+					  		 <i class="fas fa-item">{{ item.icon }}</i> 
+					  		  </router-link>
+					  		</span>
+					  	</template> 
+					  	</li> 
+					</template>
+				</ul>
 
 			<p style="text-align: center" class="barAddress">{{bar.address}}</p>
 			<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>

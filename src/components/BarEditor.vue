@@ -56,32 +56,6 @@
 			</div>
 			<hr>
 			<div class='form-group'>
-			  <label for="bar_icon">Add/Edit Icons:</label>
-			  <input type="checkbox" id="beer" :value="beer" v-model="form.icons.key1"  true-value="beer" false-value="null">
-			  <label for="beer">brewery</label>
-			  <input type="checkbox" id="glass-cheers" :value="glass-cheers" v-model="form.icons.key9"  true-value="glass-cheers" false-value="null">
-			  <label for="glass-cheers">craft beer</label>
-			  <input type="checkbox" id="biking" value="biking" v-model="form.icons.key2" true-value="biking" false-value="null">
-			  <label for="biking">bike parking</label>
-			   <input type="checkbox" id="cocktail" value="cocktail" v-model="form.icons.key3" true-value="cocktail" false-value="null">
-			  <label for="cocktail">cocktails</label>
-			  <input type="checkbox" id="utensils" value="utensils" v-model="form.icons.key4" true-value="utensils" false-value="null">
-			  <label for="utensils">food</label>
-			  <input type="checkbox" id="dice" value="dice" v-model="form.icons.key5" true-value="dice" false-value="null">
-			  <label for="dice">games</label>
-			  <input type="checkbox" id="music" value="music" v-model="form.icons.key6" true-value="music" false-value="null">
-			  <label for="music">music</label>
-			   <input type="checkbox" id="umbrella-beach" value="umbrella-beach" v-model="form.icons.key7" true-value="umbrella-beach" false-value="null">
-			  <label for="umbrella-beach">patio</label>
-			   <input type="checkbox" id="wine-glass-alt" value="wine-glass-alt" v-model="form.icons.key8"  true-value="wine-glass-alt" false-value="null">
-			  <label for="wine-glass-alt">wine</label>
-			   <input type="checkbox" id="football-ball" value="football-ball" v-model="form.icons.key10"  true-value="football-ball" false-value="null">
-			  <label for="football-ball">sports</label>
-			  <br>
-			  <span>Checked icons: {{ form.icons }}</span>
-			</div>
-			<hr>
-			<div class='form-group'>
 			  <label for="bar_typeIds">Add/Edit Types:</label>
 			  <input type="checkbox" id="brewery" :value="brewery" v-model="form.typeIds.brewery"  true-value="brewery" false-value="null">
 			  <label for="brewery">brewery</label>
@@ -205,21 +179,6 @@
 				type: Boolean,
 				default: false
 			},
-			icons: {
-				type: Object,
-				default: () => ({
-					key1: 'null',
-					key2: 'null',
-					key3: 'null',
-					key4: 'null',
-					key5: 'null',
-					key6: 'null',
-					key7: 'null',
-					key8: 'null',
-					key9: 'null',
-					key10: 'null'
-				})
-			},
 			typeIds: {
 				type: Object,
 				default: () => ({
@@ -243,7 +202,6 @@
 					image: this.image,
 					address: this.address,
 					directionsUrl: this.directionsUrl,
-					icons: this.icons,
 					typeIds: this.typeIds,
 					notes: this.notes,
 					text: this.text,
@@ -264,7 +222,6 @@
 					image: this.form.image,
 					address: this.form.address,
 					directionsUrl: this.form.directionsUrl,
-					icons: this.form.icons,
 					typeIds: this.form.typeIds,
 					notes: this.form.notes,
 					text: this.form.text

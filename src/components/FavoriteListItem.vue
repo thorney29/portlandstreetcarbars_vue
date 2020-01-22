@@ -6,7 +6,7 @@
           <div @click.prevent="editing = true" class="favorite__heart" v-bind:class="{'favorite__heart__selected': this.favorite.favoriteValue, 'is-disabled': !this.favorite.favoriteValue}"  title="Add/Remove to favorites"> 
               <i class="fas fa-heart"></i>  <!-- {{favorite.favoriteValue}}<br> -->
            </div>
-           <div @click.prevent="editing = true" class="favorite__star" v-bind:class="{'favorite__star__selected': this.favorite.toGoValue, 'is-disabled': !this.favorite.toGoValue}"  title="Add/Remove 'To Go' list"> 
+           <div @click.prevent="editing = true" class="favorite__star" v-bind:class="{'favorite__star__selected': this.favorite.toGoValue, 'is-disabled': !this.favorite.toGoValue}"  title="Add/Remove 'To Go' list">
               <i class="fas fa-star"></i> 
           </div><br>
          <div class="favorite-content">

@@ -7,7 +7,6 @@
 		:image="bar.image"
 		:address="bar.address"
 		:directionsUrl="bar.directionsUrl"
-		:icons="bar.icons" 
 		:typeIds="bar.typeIds" 
 		:notes="bar.notes" 
 		:text="bar.text"
@@ -47,14 +46,14 @@
 				return favorite ? favorite.text : null
 			},
 			hasUnsavedChanges () {
-			return (this.$refs.editor.form.title !== this.bar.title || this.$refs.editor.form.image !== this.bar.image || this.$refs.editor.form.address !== this.bar.address || this.$refs.editor.form.directionsUrl !== this.bar.directionsUrl || this.$refs.editor.form.icons !== this.bar.icons || this.$refs.editor.form.typeIds !== this.bar.typeIds || this.$refs.editor.form.notes !== this.bar.notes || this.$refs.editor.form.text !== this.bar.text) && !this.saved
+			return (this.$refs.editor.form.title !== this.bar.title || this.$refs.editor.form.image !== this.bar.image || this.$refs.editor.form.address !== this.bar.address || this.$refs.editor.form.directionsUrl !== this.bar.directionsUrl || this.$refs.editor.form.typeIds !== this.bar.typeIds || this.$refs.editor.form.notes !== this.bar.notes || this.$refs.editor.form.text !== this.bar.text) && !this.saved
 			}
 		},
 		methods: {
 			...mapActions('bars', ['updateBar', 'fetchBar']),
 			...mapActions('favorites', ['fetchFavorite']),
 
-			save ({title, image, address, directionsUrl, notes, text, icons, typeIds, favoriteValue, toGoValue}) {
+			save ({title, image, address, directionsUrl, notes, text, typeIds, favoriteValue, toGoValue}) {
 				this.updateBar({
 					id: this.id,
 					title,
@@ -63,7 +62,6 @@
 					directionsUrl,
 					notes,
 					text,
-					icons,
 					typeIds,
 					favoriteValue,
 					toGoValue

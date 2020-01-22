@@ -69,7 +69,7 @@ export default {
 		// barFavoritesCount: state => id => countObjectProperties(state.items[id].favorites)
 	},
 	actions: {
-		createBar ({state, commit, dispatch, rootState}, {typeId, title, image, address, directionsUrl, icons, typeIds, notes, text, toGoValue,
+		createBar ({state, commit, dispatch, rootState}, {typeId, title, image, address, directionsUrl, typeIds, notes, text, toGoValue,
 					favoriteValue}) {
 			return new Promise((resolve, reject) => {
 				const barId = firebase.database().ref('bars').push().key
@@ -85,7 +85,6 @@ export default {
 					image,
 					address,
 					directionsUrl,
-					icons,
 					typeIds,
 					notes,
 					text,
@@ -94,18 +93,15 @@ export default {
 					favoriteId,
 					favorites
 				}
-				console.log('bar')
-				console.log(bar)
-				console.log(typeIds)
+				// console.log('bar')
+				// console.log(bar)
+				// console.log(typeIds)
 				bar.favorites[favoriteId] = favoriteId
 				const favorite = {text, publishedAt, barId, userId, favoriteValue, toGoValue}
 				// console.log(favorite)
 				const updates = {}
 				updates[`bars/${barId}`] = bar
-				for (let i = 0; i < typeIds.length; i++) {
-					console.log('this is the type loop')
-					updates[`types/${typeIds[i]}/bars`] = bar
-				}
+
 				updates[`types/${typeId}/bars/${barId}`] = barId
 				updates[`users/${userId}/barsCreated/${barId}`] = barId
 
@@ -128,7 +124,7 @@ export default {
 			})
 		},
 
-		updateBar ({state, commit, dispatch, rootState}, {typeId, title, image, address, directionsUrl, icons, typeIds, notes, text, id, favoriteValue, toGoValue}) {
+		updateBar ({state, commit, dispatch, rootState}, {typeId, title, image, address, directionsUrl, typeIds, notes, text, id, favoriteValue, toGoValue}) {
 			return new Promise((resolve, reject) => {
 				const bar = state.items[id]
 				const favorite = rootState.favorites.items[bar.favoriteId]
@@ -138,10 +134,6 @@ export default {
 					by: rootState.auth.authId
 				}
 
-				// const iconIdArray = Object.values(bar.icons).filter(function (icon) {
-				// 	return icon !== 'null'
-				// })
-
 				const updates = {}
 				// updates[`favorites/${bar.favoriteId}/text`] = text
 				// updates[`favorites/${bar.firstFavoriteId}/edited`] = edited
@@ -150,69 +142,24 @@ export default {
 				// updates[`favorites/${bar.favoriteId}/toGoValue`] = toGoValue
 				updates[`bars/${id}/title`] = title
 				updates[`bars/${id}/image`] = image
-				updates[`bars/${id}/icons`] = icons
 				updates[`bars/${id}/typeIds`] = typeIds
 				updates[`bars/${id}/address`] = address
 				updates[`bars/${id}/directionsUrl`] = directionsUrl
 				updates[`bars/${id}/notes`] = notes
 				updates[`bars/${id}/text`] = text
-				// const typeIdArray = Object.values(bar.typeIds)
-				// const iconIdArray = Object.values(bar.icons)
-				// const typeIdArray = Object.values(bar.typeIds).filter(function (typeId) {
-				// 	return typeId !== 'null'
-				// })
-				// console.log('typeIdArray')
-				// console.log(typeIdArray)
-				const typeIdArray = Object.entries(bar)
-				console.log('typeIdArray')
-				console.log(typeIdArray)
-				// for (let i = 0; i < typeIdArray.length; i++) {
-				// 	typeId = typeIdArray[i]
-					// const typeObj = Object.values(bar.typeIds)
-					// console.log(obj)
-					// Object.keys(typeObj).forEach(function (key) {
-					// 	console.log('key', 'typeObj[key]')
-					// 	if (typeObj[key] !== null) {
-					// 		console.log(`types/${typeId}/bars`)
-					// 		console.log(key, typeObj[key])
-					// 		updates[`types/${typeId}/bars/${id}`] = id
-					// 	} else if (typeObj[key] === undefined) {
-					// 		// console.log(`types/${typeId}/bars`)
-					// 		// updates[`types/${typeId}/bars/${id}`] = null
-					// 		firebase.database().ref(`types/${typeId}/bars/${id}`).remove()
-					// 	} else {
-					// 		//
-					// 	}
-					// })
-				// }
-				// for (let i = -1; i < iconIdArray.length; i++) {
-				// 	icons = iconIdArray[i]
-				// 	const iconObj = Object.values(bar.icons)
-				// 	// console.log(obj)
-				// 	Object.keys(iconObj).forEach(function (key) {
-				// 		console.log('key', 'iconObj[key]')
-				// 		if (iconObj[key] === 'null') {
-				// 			console.log(key, iconObj[key])
-				// 			updates[`bars/${id}/icons`] = null
-				// 		} else {
-				// 			updates[`bars/${id}/icons`] = icons
-				// 		}
-				// 	})
-				// }
-				// const notTypeIdArray = Object.values(bar.typeIds).filter(function (typeId) {
-				// 	return typeId === 'null'
-				// })
-				// for (let i = 0; i < notTypeIdArray.length; i++) {
-				// 	if (notTypeIdArray[i] === 'null') {
-				// 		console.log(notTypeIdArray)
-				// 		updates[`types/${typeId}/bars/${id}`] = null
-				// 	}
-				// }
-				// console.log('bar')
-				// console.log(bar)
-				// console.log(typeIds)
-				// updates[`bars/${id}/favoriteValue`] = favoriteValue
-				// updates[`bars/${id}/toGoValue`] = toGoValue
+
+				// remove the typeIds that are unchecked and add those that are checked
+				const typeObj = Object.values(typeIds)
+				Object.keys(typeObj).forEach(function (key) {
+					for (var name in typeIds) {
+						var value = typeIds[name]
+						if (value === 'null') {
+							updates[`types/${name}/bars/${id}`] = null
+						} else {
+							updates[`types/${name}/bars/${id}`] = id
+						}
+					}
+				})
 				firebase.database().ref().update(updates)
 				.then(() => {
 					commit('setBar', {bar: {...bar, title}, barId: id})

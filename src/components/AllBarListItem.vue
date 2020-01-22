@@ -110,7 +110,7 @@
 						</div>
 						<div v-else class="card" style="border: 2px solid #ccc;">
 					 		<div style="padding: 20px;" v-if="!isFavorite">
-								{{isFavorite}}
+								<!-- {{isFavorite}} -->
 								<FavoriteEditor
 								@save="editing = false"
 								@cancel="editing = false"
@@ -173,7 +173,6 @@
 				favoriteValue: this.bar ? this.bar.favoriteValue : '',
 				toGoValue: this.bar ? this.bar.toGoValue : '',
 				text: this.bar ? this.bar.text : '',
-				icons: this.bar ? this.bar.icons : '',
 				// favorites: this.user ? this.user.favorites : '',
 				isShowing: false
 			}
@@ -219,9 +218,6 @@
 			...mapGetters({
 				user: 'auth/authUser'
 			}),
-			BarsCount () {
-				return countObjectProperties(this.type.bars)
-			},
 			types () {
 				return Object.values(this.$store.state.types.items)
 			},
@@ -235,7 +231,7 @@
 			contributorsCount () {
 				return countObjectProperties(this.bar.contributors)
 			},
-		// 	// Get this User's Bar Favorites
+			// Get this User's Bar Favorites
 			favorites () {
 				const favoriteIds = Object.values(this.bar.favorites)
 				const userFavoriteIds = undefined

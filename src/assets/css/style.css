@@ -312,6 +312,9 @@ ul.icons{
     svg.svg-inline--fa:hover {
         color:#fff !important;
     }
+    svg.svg-inline--fa.fa-heart.fa-w-16:hover {
+        color: red !important;
+    }
 .barNotes {
         border-top: 1px dashed black;
         border-bottom: 1px dashed black;
