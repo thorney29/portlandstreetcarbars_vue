@@ -11,7 +11,7 @@
 		<div class="col-7 push-top">
 			<div class="profile-header">
 				<span class="text-lead">
-				  {{user.name}}'s recent activity
+				  {{user.name}}'s recent activity 
 				</span>
 			</div>
 			<hr>
@@ -41,15 +41,47 @@
 				default: false
 			}
 		},
+		data () {
+			return {
+				contributors: this.bars ? this.bars.contributors : []
+			}
+		},
 		methods: {
 			...mapActions('bars', ['fetchAllBars']),
-			...mapActions('favorites', ['fetchAllFavorites', 'fetchFavorites'])
+			...mapActions('favorites', ['fetchAllFavorites', 'fetchFavorites']),
+			...mapActions('users', ['fetchUser'])
 		},
 		computed: {
 			...mapGetters({
 				user: 'auth/authUser'
 			}),
 			bars () {
+				let bars = Object.values(this.$store.state.bars.items)
+				let user = Object.values(this.user)
+				if (user.barFavorites !== undefined && user.barFavorites !== 'undefined' && user.barToGo !== undefined && user.barToGo !== 'undefined') {
+				// }
+					const barFavorites = Object.values(this.user.barFavorites)
+					const barToGo = Object.values(this.user.barToGo)
+					const annotatedBars = barFavorites.concat(barToGo)
+					return bars.filter(function (bar) {
+						return annotatedBars.indexOf(bar['.key']) >= 0
+					})
+				} else if (user.barFavorites !== undefined) {
+					const barFavorites = Object.values(this.user.user.barFavorites)
+					return bars.filter(function (bar) {
+						return barFavorites.indexOf(bar['.key']) >= 0
+					})
+				} else if (user.barToGo !== undefined) {
+					const barToGo = Object.values(this.user.barToGo)
+					return bars.filter(function (bar) {
+						return barToGo.indexOf(bar['.key']) >= 0
+					})
+				} else if (user.barToGo === undefined) {
+					// do nothing
+				} else {
+					// do nothing
+				}
+
 				return Object.values(this.$store.state.bars.items)
 			},
 			favorites () {
@@ -68,9 +100,36 @@
 			}
 		}
 	}
+// const barObj = Object.values(this.$store.state.bars.items)
+// const user = this.user['.key']
+// console.log(user)
+// console.log(barObj)
+// if (barObj['.key'].contributors !== 'undefined' || barObj['.key'].contributors !== null || barObj['.key'].contributors !== undefined) {
+// const barFavoritesKeys = Object.values(barObj[this.bar['.key']].contributors)
+// console.log(barFavoritesKeys)
+// 	Object.keys(barObj).forEach(function (user) {
+// 		const bars = barObj.filter(bar =>
+// 			bar['.key'].contributors === user)
+// 		// const bars = barObj.filter(bar => barObj.includes(user))
+// 		console.log(bars)
+// 	})
+// }
+
+// Object.keys(barObj).forEach(function (key) {
+// 	for (var name in contributors) {
+// 		var value = contributors[name]
+// 		if (value === 'null') {
+// 			return
+// 		} else {
+// 		const bar = Object.values(this.$store.state.bars).filter(bar => bar.contributors === this.user['.key'])
+// 		console.log(bar)
+// 		}
+// 	}
+// })
 </script>
 <style scoped>
 	.flex-grid {
 		background: transparent;
 	}
 </style>
+

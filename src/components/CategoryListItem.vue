@@ -1,12 +1,5 @@
 <template>
 	<div class="category">
-<!-- 		<h2 class="list-title">
-		<router-link 
-		:to="{name: 'PageCategory', params: {id: category['.key'], slug: category.slug}}" 
-		class="category-name">
-		 {{ category.name }}
-		</router-link>
-		</h2> -->
 		<!-- this shows the 3 main category types on the site: Beer, Cocktails, Wine -->
 		<TypeList :types="categoryTypes" v-bind:class="{ special: categoryTypes.length > 1 }"/></div>
 </template>
@@ -39,4 +32,5 @@
 		margin:auto;
 	}
 	p {text-align: center;}
+	
 </style>

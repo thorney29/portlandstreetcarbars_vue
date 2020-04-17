@@ -1,12 +1,13 @@
 <template>
-	<header class="header" id="header" v-click-outside="closeMobileNav" v-handle-scroll="closeMobileNav">
+	<header class="header" id="header" 
+	 v-click-outside="closeMobileNav" v-handle-scroll="closeMobileNav">
 		<router-link
 		class="logo"
 		:to="{name: 'PageHome'}">
 		    <img src="../assets/img/train-in-green-small.png">
 		</router-link>
  		
-		<div class="btn-hamburger" @click="mobileNavOpen = !mobileNavOpen">
+		<div v-toggle-class-on-main-container="toggleClassOnMainContainer" class="btn-hamburger" @click="mobileNavOpen = !mobileNavOpen">
 		  <!-- use .btn-humburger-active to open the menu -->
 		  <div class="top bar"></div>
 		  <div class="middle bar"></div>
@@ -15,63 +16,38 @@
 
 		<!-- use .navbar-open to open nav -->
 		<nav class="navbar" :class="{'navbar-open' : mobileNavOpen}">
-			 		<ul class="left">
-						<li class="navbar-item">
-							<router-link
-							:to="{name: 'PageHome'}">
-							   Home
-							</router-link>
-						</li>
-						<!-- <li class="navbar-item">
-							<router-link
-							:to="{name: 'PageDirections'}">
-								Find Bars/Get Directions
-							</router-link>
-						</li> -->
-<!-- 						<li class="navbar-item">
-							<router-link
-							:to="{name: 'PageCrawls'}">
-								Recommended Bar Crawls
-							</router-link>
-						</li> -->
-						<li class="navbar-item">
-							<router-link
-							:to="{name: 'PageTypeCategories'}">
-							  Find Bars
-							</router-link>
-						</li>
-						<li class="navbar-item">
-							<router-link
-							:to="{name: 'PageDirections'}">
-							  View All Bars
-							</router-link>
-						</li>
-						<li class="navbar-item">
-							<router-link
-							:to="{name: 'PageMap'}">
-							View Bar Map
-						</router-link>
-						</li>
-						<!-- <li class="navbar-item" v-click-outside="closeMore">
-							<a @click.prevent="navMoreOpen =!navMoreOpen">
-								<span>
-									More
-									<img class="icon-profile" src="../assets/img/svg/arrow-profile.svg" alt="">
-								</span>
-							</a> -->
-							<!-- <div id="dropdown" :class="{'active-drop': navMoreOpen}">
-								<div class="triangle-drop"></div>
-								<ul class="dropdown-menu">
-									<li class="dropdown-menu-item">
-										<a target="_blank" href="http://www.portlandstreetcar.org/">About Portland's Streetcar</a>
-									</li>
-									<li class="dropdown-menu-item">
-										<a target="_blank" href="http://trimet.org/#/planner">More About Trimet</a>
-									</li>
-								</ul>
-							</div> -->
-						<!-- </li> -->
-					</ul>
+	 		<ul class="left" v-toggle-class-on-main-container="toggleClassOnMainContainer" @click="mobileNavOpen = !mobileNavOpen">
+				<li class="navbar-item">
+					<router-link
+					:to="{name: 'PageHome'}">
+					   Home
+					</router-link>
+				</li>
+				<li class="navbar-item">
+					<router-link
+					:to="{name: 'PageTypeCategories'}">
+					  Find Bars
+					</router-link>
+				</li>
+				<li class="navbar-item">
+					<router-link
+					:to="{name: 'PageDirections'}">
+					  View All Bars
+					</router-link>
+				</li>
+				<li class="navbar-item">
+					<router-link
+					:to="{name: 'PageMap'}">
+					View Bar Map
+				</router-link>
+				</li>
+				<li class="navbar-item">
+					<router-link
+					:to="{name: 'PageContact'}">
+					Contact
+				</router-link>
+				</li>
+			</ul>
 			<ul v-if="user">
 				<li class="navbar-user" v-click-outside="closeUserDropdown">
 					<a @click.prevent="userDropdownOpen =!userDropdownOpen">
@@ -116,12 +92,16 @@
 
 <script>
 	import {mapGetters} from 'vuex'
+	// import toggleContainerClass from '@/directives/toggle-container-class'
 	import clickOutside from '@/directives/click-outside'
 	import handleScroll from '@/directives/handle-scroll'
+	import toggleClassOnMainContainer from '@/directives/toggle-class-on-main-container'
 	export default {
 		directives: {
+			// toggleContainerClass,
 			clickOutside,
-			handleScroll
+			handleScroll,
+			toggleClassOnMainContainer
 		},
 
 		computed: {
@@ -139,14 +119,21 @@
 		},
 
 		methods: {
+			// toggleClassOnMainContainer () {
+			// 	this.navMoreOpen = false
+			// },
 			closeMore () {
 				this.navMoreOpen = false
 			},
 			closeUserDropdown () {
 				this.userDropdownOpen = false
 			},
+			toggleClassOnMainContainer () {
+				document.querySelector('#masterContainerFluid').classList.toggle('moveDown')
+	        },
 			closeMobileNav () {
 				this.mobileNavOpen = false
+				document.querySelector('#masterContainerFluid').classList.remove('moveDown')
 			}
 		}
 	}

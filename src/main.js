@@ -7,16 +7,15 @@ import router from './router'
 import store from '@/store'
 import AppDate from '@/components/AppDate'
 import vuelidate from 'vuelidate'
-// import nativeToast from 'native-toast'
 
 // import css here because it did not work
 import '@/assets/css/style.css'
 import '../node_modules/nprogress/nprogress.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
-import '@/assets/js/custom.js'
 
 Vue.use(vuelidate)
+
 Vue.component('AppDate', AppDate)
 
 Vue.config.productionTip = false

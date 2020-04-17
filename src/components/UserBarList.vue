@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div v-if="!user.favorites" class="flex-grid">
-			You have no saved favorites.
+			You have no saved favorites yet. Get busy! 
 		</div>
 		<div v-else class="flex-grid">
 			<UserBarListItem
@@ -34,3 +34,6 @@
 		}
 	}
 </script>
+<style scoped>
+	/*.flex-grid {color: white;}*/
+</style>

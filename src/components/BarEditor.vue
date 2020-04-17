@@ -65,6 +65,8 @@
 			  <label for="bikeparking">bike parking</label>
 			   <input type="checkbox" id="cocktails" value="cocktails" v-model="form.typeIds.cocktails" true-value="cocktails" false-value="null">
 			  <label for="cocktails">cocktails</label>
+			  <input type="checkbox" id="coffee" :value="coffee" v-model="form.typeIds.coffee"  true-value="coffee" false-value="null">
+			  <label for="coffee">coffee</label>
 			  <input type="checkbox" id="food" value="food" v-model="form.typeIds.food" true-value="food" false-value="null">
 			  <label for="food">food</label>
 			    <input type="checkbox" id="games" value="games" v-model="form.typeIds.games" true-value="games" false-value="null">
@@ -155,6 +157,10 @@
 				type: Boolean,
 				default: false
 			},
+			coffee: {
+				type: Boolean,
+				default: false
+			},
 			games: {
 				type: Boolean,
 				default: false
@@ -186,6 +192,7 @@
 					brewery: 'null',
 					cocktails: 'null',
 					craftbeer: 'null',
+					coffee: 'null',
 					games: 'null',
 					food: 'null',
 					music: 'null',
@@ -224,7 +231,9 @@
 					directionsUrl: this.form.directionsUrl,
 					typeIds: this.form.typeIds,
 					notes: this.form.notes,
-					text: this.form.text
+					text: this.form.text,
+					favoriteValue: this.form.favoriteValue,
+					toGoValue: this.form.toGoValue
 				})
 			},
 			cancel () {

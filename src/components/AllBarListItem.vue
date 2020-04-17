@@ -1,18 +1,41 @@
-<template>
+ <template>
 	<li v-if="bar" class="flex-item card" v-bind:class = "{ 'yellow-border': barFavoritesCount >= 10 }">
   		<div class="card-details">
   			<div class="card-header">
-	      		<router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}">
-		      		<img @error="imageUrlAlt" class="card-img-top card__image" :src="bar.image" alt="Card image cap">
+	      		<!-- <router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}"> -->
+	      		<router-link :to="{name: 'PageBarShow', 
+	      		params: {id: bar['.key'], slug: bar.slug}
+	      		}">
+		      		<img @error="imageUrlAlt" class="card-img-top card__image" :src="'/static/assets/img/small/' + image" alt="Card image cap">
 		      		<!-- Heading -->
 					<div class="wrapper">       
-							<h2 class="sparkle u-hover--sparkle">{{bar.title}}</h2>
+						<h2 class="sparkle u-hover--sparkle">{{bar.title}}</h2>
 					</div>
 				</router-link>
 			</div>
 			<div class="card__content">
 				<div class="card__text">
-					<p><!-- Bar Type Icons -->
+					<!-- type was here -->
+
+					<p class="favorited" style="text-align: center;">
+						<span v-if="barFavoritesCount === 0" class="inactive">
+						<i class="fas fa-heart"></i>
+						</span>
+						<span v-if="barFavoritesCount > 0" class="active">
+							<i class="fas fa-heart"></i>
+							<span>  &nbsp; {{barFavoritesCount}}  </span>
+						</span>
+					</p>
+					<!-- click to view -->
+					<div v-show="!isShowing">
+						<button class="btn-green" @click="isShowing ^= true">Show More</button>
+					</div>
+					<div v-show="isShowing">
+						<button class="btn-green show-less" @click="isShowing ^= true">Show Less</button>
+					</div>
+					
+					<div v-show="isShowing" class="showMoreDetails">
+						<p><!-- Bar Type Icons -->
 						<ul class="icons">
 						<template
 						  v-for="(typeId, key, index) in bar.typeIds">
@@ -25,80 +48,14 @@
 						            class="type-name" 
 						            :title="item.description"
 						            :to="{name: 'PageType', params: {id : item['.key']}}"> 
-						  		 <i class="fas fa-item">{{ item.icon }}</i> 
+						  			<i class="fas fa-item">{{ item.icon }}</i> 
 						  		  </router-link>
 						  		</span>
 						  	</template> 
 						  	</li> 
 						  </template>
 						</ul>
-						<!-- <ul style="display: flex; justify-content: center;border: 2px solid red" > -->
-						<!-- <ul class="icons">
-						  <template 
-						  v-for="(item, key, index) in bar.icons">
-						  	<li style="" 
-						  	v-for="type in types"  
-						  	 v-if="item == type.icon">
-						  		<span>
-						  		  <router-link 
-						            class="type-name" 
-						            :title="type.description"
-						            :to="{name: 'PageType', params: {id : type['.key']}}"> 
-						            <i class="fas fa-item">{{ item }}</i> 
-						            </router-link>
-						  		</span> 
-						  	</li>
-						  </template>
-						</ul> -->
-					  	<!-- show a list of bar icons if there is an item to show -->
-					  <!-- 	<ul class="icons">
-						  <template 
-						  v-for="(item, key, index) in bar.icons">
-						  	<li style="" 
-						  	v-for="type in types"  
-						  	 v-if="item == type.icon">
-						  		<span>
-						  		  <router-link 
-						            class="type-name" 
-						            :title="type.description"
-						            :to="{name: 'PageType', params: {id : type['.key']}}"> 
-						            <i class="fas fa-item">{{ item }}</i> 
-						            </router-link>
-						  		</span> 
-						  	</li>
-						  </template>
-						</ul> -->
-						<!-- </ul> -->
-						<!-- <ul class="icons">
-						  <li v-for="(item, key, index) in bar.icons" v-if="item !== 'null'">
-							<ul>
-						  	<li style="border:none;" v-for="type in types"  v-if="item !== ''">
-						  		<span v-if="item == type.icon">
-						  		  <router-link 
-						            class="type-name"
-						            :to="{name: 'PageType', params: {id : type['.key']}}"> 
-						            <i class="fas fa-item">{{ item }}</i> 
-						            </router-link>
-						  		</span>
-						  	</li>
-						  	</ul>
-						  </li>
-						</ul> -->
-					</p>
-					<!-- Bar Favorite Count -->
-					<p class="favorited" style="text-align: center;">
-						<i class="fas fa-heart"></i>
-						{{barFavoritesCount}} {{barFavoritesCount === 1 ? 'favorite': 'favorites' }} 
-					</p>
-					<!-- click to view -->
-					<div v-show="!isShowing">
-						<button class="btn-green" @click="isShowing ^= true">Show More</button>
-					</div>
-					<div v-show="isShowing">
-						<button class="btn-green show-less" @click="isShowing ^= true">Show Less</button>
-					</div>
-					
-					<div v-show="isShowing" class="showMoreDetails">
+						</p>
 						<div class="address">
 							<p><strong>Address: {{bar.address}}</strong></p>			
 							<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
@@ -132,17 +89,15 @@
 				</div>
 			</div>
 		</div>
-      </li>
+    </li>
 </template>
 
 <script>
-	// added this now
 	import {mapActions, mapGetters} from 'vuex'
 	import FavoriteList from '@/components/FavoriteList'
 	import FavoriteEditor from '@/components/FavoriteEditor'
 	import {countObjectProperties} from '@/utils'
 	import asyncDataStatus from '@/mixins/asyncDataStatus'
-	// import { filter, count } from 'vue-computed-helpers'
 
 	export default {
 		components: {
@@ -157,60 +112,36 @@
 			favorite: {
 				type: Object,
 				require: true
-			},
-			type: {
-				type: String,
-				require: true
 			}
 		},
 		data () {
 	        return {
 				id: this.bar ? this.bar['.key'] : '',
+				slug: this.bar ? this.bar.slug : '',
 				editing: false,
+				image: this.bar ? this.bar.image : '',
 				address: this.bar ? this.bar.address : '',
 				directionsUrl: this.bar ? this.bar.directionsUrl : '',
 				notes: this.bar ? this.bar.notes : '',
+				typeIds: this.bar ? this.bar.typeIds : '',
 				favoriteValue: this.bar ? this.bar.favoriteValue : '',
 				toGoValue: this.bar ? this.bar.toGoValue : '',
 				text: this.bar ? this.bar.text : '',
-				// favorites: this.user ? this.user.favorites : '',
 				isShowing: false
 			}
 		},
 		mixins: [asyncDataStatus],
 		methods: {
+			// getImgUrl (image) {
+			// 	return require('../assets/img/small/' + image)
+			// },
 			imageUrlAlt (event) {
 				// event.target.src = '/static/img/pattern2.jpg'
 			},
-			// navigate: function (title) {
-			// 	var ua = navigator.userAgent.toLowerCase()
-
-			// 	function iOSversion () {
-			// 		if (/iP(hone|od|ad)/.test(navigator.platform)) {
-			// 			// supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
-			// 			var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)
-			// 			return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)]
-			// 		}
-			// 	}
-			// 	var ver = iOSversion() || [0]
-			// 	// var addressLongLat = lat + ',' + lng
-			// 	if (ver[0] >= 5) {
-			// 		window.open('https://maps.apple.com/?q=' + title, '_system')
-			// 		if (navigator.userAgent.match('CriOS')) {
-			// 			window.open('comgooglemaps://?q=' + title)
-			// 			// window.open("geo:0,0?q="+ name , '_system')
-			// 		}
-			// 	} else if ((ua.indexOf('android') !== -1)) {
-			// 		// window.open("geo:"+addressLongLat)
-			// 		window.open('geo:0,0?q=' + title, '_system')
-			// 	} else {
-			// 		// window.open("http://maps.google.com/?q="+addressLongLat, '_system')
-			// 		window.open('https://www.google.com/maps/place/?key=AIzaSyCXOqIYw5VQH9kCQwj3buLfVV3vHvKfxsM&q=' + title)
-			// 	}
-			// },
 			...mapActions('bars', ['fetchBar']),
 			...mapActions('users', ['fetchUser']),
-			...mapActions('favorites', ['fetchFavorites']),
+			// ...mapActions('favorites', ['fetchFavorites']),
+			...mapActions('favorites', ['fetchAllFavorites']),
 			...mapActions('types', ['fetchAllTypes'])
 		},
 		computed: {
@@ -249,28 +180,20 @@
 			},
 			// Check to see if this
 			isFavorite () {
+				if (this.bar.favorites === undefined || this.bar.favorites === null) {
+					return
+				}
 				const favoriteIds = Object.values(this.bar.favorites)
 				// const userFavoriteIds = null
 				const userFavoriteIds = undefined
 				if (this.user.favorites) {
 					const userFavoriteIds = Object.values(this.user.favorites)
-
-					// console.log('favoriteIds')
-					// console.log(favoriteIds)
-					// console.log('userFavoriteIds')
-					// console.log(userFavoriteIds)
-					// const isFavorite = Object.values(this.$store.state.favorites.items)
 					const isFavorite = Object.values(this.favorites)
 					.filter(favorite => favoriteIds.includes(favorite['.key']))
 					.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-					// console.log('isFavorite')
-					// console.log(isFavorite)
-					// console.log(typeof isFavorite)
 					for (var key in isFavorite) {
 						var value = isFavorite[key]
 					}
-					// console.log('value')
-					// console.log(value)
 					if (value === undefined) {
 						return false
 					} else {
@@ -279,28 +202,49 @@
 				}
 				return userFavoriteIds
 			}
-		},
-
-		created () {
-			this.fetchAllTypes()
-			// fetch bar
-			this.fetchBar({id: this.id})
-			.then(bar => {
-				// fetch user
-				// this.fetchFavorite({id: this.id})
-				// this.fetchUser({id: bar.userId})
-				return this.fetchFavorites({ids: Object.keys(bar.favorites)})
-			})
-			.then(favorites => {
-				return Promise.all(favorites.map(favorite => {
-			// 		// this.fetchUser({id: favorite.userId})
-					console.log('success fetched favorites')
-				}))
-			})
-			.then(() => {
-					this.asyncDataStatus_fetched()
-			})
 		}
+		// ,
+		// created () {
+		// 	this.fetchAllTypes()
+		// 	// fetch bar
+		// 	this.fetchBar({id: this.id})
+		// 	.then(bar => {
+		// 		// fetch user
+		// 		// this.fetchFavorite({id: this.id})
+		// 		return this.fetchAllFavorites({ids: Object.keys(bar.favorites)})
+		// 	})
+		// 	.then(favorites => {
+		// 		return Promise.all(favorites.map(favorite => {
+		// 		// this.fetchUser({id: favorite.userId})
+		// 		console.log('success fetched favorites')
+		// 		// this.asyncDataStatus_fetched()
+		// 		}))
+		// 	})
+		// 	.then(() => {
+		// 		this.asyncDataStatus_fetched()
+		// 	})
+		// }
+		// created () {
+		// 	this.fetchAllTypes()
+		// 	// fetch bar
+		// 	this.fetchBar({id: this.id})
+		// 	.then(bar => {
+		// 		// fetch user
+		// 		// this.fetchFavorite({id: this.id})
+		// 		// this.fetchUser({id: bar.userId})
+		// 		return this.fetchFavorites({ids: Object.keys(bar.favorites)})
+		// 	})
+		// 	.then(favorites => {
+		// 		this.asyncDataStatus_fetched()
+		// 		return Promise.all(favorites.map(favorite => {
+		// 	// 		// this.fetchUser({id: favorite.userId})
+		// 			console.log('success fetched favorites')
+		// 		}))
+		// 	})
+		// 	.then(() => {
+		// 			this.asyncDataStatus_fetched()
+		// 	})
+		// }
 	}
 </script>
 <style scoped>
@@ -337,7 +281,7 @@
 	.u-hover--sparkle {
 	  box-sizing: border-box;
 	  position: relative;
-	  padding: 0.75em;
+	  padding: 0.75em .35em;
 	}
 	.u-hover--sparkle::before, .u-hover--sparkle::after {
 	  content: '';
@@ -375,9 +319,18 @@
 	}
 
 	.showMoreDetails {
-		border: #54b09b 10px dotted;
+		/*border: #54b09b 10px dotted;
+	    padding: .8rem;*/
+	    margin: 7% 3%;
+	    width: 94%;
 	    padding: .8rem;
-	    margin: 7% auto 0;
+	    padding: 20px 0;
+	    border-style: dotted;
+	    border: 10px solid;
+		border-color: #54b09b; 
+		border-image-source: url('../assets/img/svg/dots.svg');;
+		border-image-slice:33% 33%; 
+		border-image-repeat:round; 
 	}
 	.barNotes {
 		border-top: 1px dashed black;
@@ -392,8 +345,7 @@
 	.favorited {color: red;margin: 3% auto;}
 	.show-less {margin: 2% auto;}
 
-/* card code */
-
+	/* card code */
 	.flex-item.card{
 	  display: flex;
 	  padding: .5rem;
@@ -430,7 +382,7 @@
 	  display: flex;
 	  flex: 1 1 auto;
 	  flex-direction: column;
-	  padding: 1rem;
+	  padding: 0;
 	  text-align: center;
 	}
 	.card__image {
@@ -452,6 +404,15 @@
 	  display: block;
 	  padding-top: 56.25%;
 	}
+	ul.icons li:hover {
+	    background:black;
+	}
+	svg.svg-inline--fa:hover {
+	    color:#fff !important;
+	}
+	svg.svg-inline--fa.fa-heart.fa-w-16:hover {
+	    color: red !important;
+	}
 	@media (min-width: 40rem) {
 	  .card__image::before {
 	    padding-top: 66.6%;
@@ -459,6 +420,7 @@
 	}
 	.card-header {
 		flex: 0 1 100%;
+		-webkit-flex: 1;
 	}
 	.wrapper {
 	  color: #696969;
@@ -473,6 +435,16 @@
 	  line-height: 1.5;
 	  margin-bottom: 1.25rem;
 	}
-
-
+	@media (max-width:736px) {
+		.card {width: 320px;margin:4% auto;}
+		.sparkle {
+	        max-width: 100%;    
+	    }
+	}
+	/*@media (max-width:580px) {
+		.card {width: 320px;margin:4% auto;}
+		.sparkle {
+	        max-width: 100%;    
+	    }
+	}*/
 </style>

@@ -1,6 +1,7 @@
 <template>
 	<div class="flex-grid">
 		<ul class="cards">
+<!-- v-for="bar in bars" -->
 			<AllBarListItem
 			v-for="bar in bars"
 			:bar="bar"
@@ -14,17 +15,17 @@
 </template>
 
 <script>
-	
+	// import infiniteScroll from 'vue-infinite-scroll'
 	import AllBarListItem from './AllBarListItem'
 	export default {
 		components: {
 			AllBarListItem
 		},
 		props: {
-			// bars: {
-			// 	required: true,
-			// 	type: Array
-			// },
+			bars: {
+				required: true,
+				type: Array
+			},
 			user: {
 				required: false,
 				type: Object
@@ -34,17 +35,8 @@
 				type: Array
 			}
 		},
-		computed: {
-			bars () {
-				let bars = Object.values(this.$store.state.bars.items)
-				let barArray = []
-				bars.forEach(function (bar) {
-					barArray.push(bar)
-				})
-				bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
-				return bars
-			}
-		}
+		methods: {},
+		computed: {}
 	}
 </script>
 

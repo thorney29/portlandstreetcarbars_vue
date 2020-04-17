@@ -213,6 +213,6 @@
   </script>  -->
 <style scoped>
 .map {
-	width: 80%;margin:auto;
+	width: 94%;margin:auto;
 }
 </style>

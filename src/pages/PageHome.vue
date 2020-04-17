@@ -76,7 +76,7 @@
 					<i class="fas fa-train"></i>
 				</div>
 				<div class="content">
-					<h2 class="center">Easy to Find</h2>
+					<h2 class="center"><a href="/all-bars">Easy to Find</a></h2>
 					<p class="light">Use the <em>portlandstreetcarbar</em> map to easily find and meet up with your friends in inner SE/NE Portland. </p>   
 	            </div><!-- e-iconblock -->
 	        </div><!-- e-cols12m4 -->
@@ -85,8 +85,9 @@
 					<i class="fas fa-map-signs"></i>
 				</div>
 				<div class="content">
-					<h2 class="center">Easy to Get There</h2>
-					<p class="light">Take the Bus, MAX, or ride your bike to the streetcar. No driving means a safer night for everyone.</p>
+					<h2 class="center"><a target="_blank" href="https://trimet.org/schedules/index.htm#maps">Easy to Get There<img class="externalLink" src="../assets/img/svg/external-link-alt-solid.svg" alt=""></a></h2>
+					<p class="light">Take the Bus, MAX, or ride your bike to the <a href="https://portlandstreetcar.org/schedules">streetcar.</a> 
+						It's easy. <a href="https://portlandstreetcar.org/ride-guide/how-to-ride">Use the ride guide</a> to learn more about riding the streetcar. No driving means a safer night for everyone.</p>
             	</div><!-- e-iconblock -->
             </div><!-- e-cols12m4 -->
             <div class="columns-3">
@@ -94,7 +95,7 @@
 					<i class="fas fa-laugh-beam"></i>
 				</div>
 				<div class="content">
-					<h2 class="center">More Time for Fun</h2>
+					<h2 class="center"><a href="">More Time for Fun</a></h2>
 					<p class="light">Plan a streetcarbar crawl to explore new locations with friends in Portland's inner northeast and southeast neighborhoods.</p>
             	</div><!-- e-iconblock -->
           	</div><!-- e-cols12m4 -->
@@ -152,9 +153,6 @@
 		margin: 2% auto auto;
 		padding: 30px;
 	}
-	section.columns-flex.bottomBoxes {
-		margin: 9% auto auto;
-	}
 	section.columns-flex .columns-3 {
 		width: 31.333%;
 		margin:1%;
@@ -162,7 +160,6 @@
 	    text-align: center;
 	    padding: 20px;
 	}
-
 	section.columns-flex h2,
 	section.columns-flex h3 {
 	      font-size: 28px;
@@ -183,7 +180,7 @@
 	      object-fit: cover;
 	}
     .parallax-container.home-bottom-banner {
-      height: 400px;
+     /* height: 400px;*/
       text-align: center;
       font-family: sans-serif;
     }
@@ -211,14 +208,23 @@ font-family: 'Megrim', cursive;*/
     	font-size: 3.2rem;
 		font-family: 'Megrim', cursive;
     }
+    .externalLink {
+    	width: 6%;
+	    margin-left: 8px;
+    }
     .home-bottom-banner p {
 		padding: 20px;
     }
+    svg.svg-inline--fa.fa-utensils.fa-w-13{
+        color: #545454;
+    }
+    svg.svg-inline--fa.fa-utensils.fa-w-13,
 	svg.svg-inline--fa.fa-train.fa-w-14,
 	svg.svg-inline--fa.fa-map-signs.fa-w-16,
 	svg.svg-inline--fa.fa-laugh-beam.fa-w-16 {
     	font-size: 3.2rem;
     }
+
     section.parallax-footer-image {width: 100%;}
     .bottomBoxes h2,
     .middleBoxes h2 {
@@ -227,4 +233,48 @@ font-family: 'Megrim', cursive;*/
     .ParallaxImage {height: 500px;}
     .ParallaxImage img {width: 100%;}
     .footer-copyright {text-align:center;}
+   
+    @media screen and (max-width: 580px) {
+    	.parallax-title, .parallax-content {
+    		top: 5%;
+    	}
+    	.parallax-content section.logo-header-area {
+    		margin-top:0;
+    		flex-flow: column wrap;
+    		justify-content: center;
+    	}
+    	
+    	.parallax-content section.logo-header-area div {
+    		width: 100%;
+    	}
+    	.logo-bg {
+		    border-right:none;
+		}
+    	.logo-header .Masthead {
+		    min-height: 110vh !important;
+		}
+		section.columns-flex {margin: 5% auto;}
+		section.columns-flex,
+		section.columns-flex .columns-3 {
+			width:100%;
+		}
+		.parallax-container.home-bottom-banner { margin-top:0; }
+
+		.parallax-container.home-bottom-banner .background {
+		    height: 640px;
+		}
+		.whiteBox {
+		    margin: -22% 0  0;
+		}
+		.ParallaxImage {height:170px;}
+    }
+
+    @media screen and (max-width: 380px) { 
+    	.logo-header .Masthead {
+		    min-height: 120vh !important;
+		}
+		section.columns-flex.bottomBoxes[data-v-068a649c] {
+		    margin: 70.5% auto auto;
+		}
+    }
   </style>

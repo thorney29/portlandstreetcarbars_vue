@@ -5,7 +5,7 @@ import PageHome from '@/pages/PageHome'
 import PageTypeCategories from '@/pages/PageTypeCategories'
 import PageType from '@/pages/PageType'
 import PageMap from '@/pages/PageMap'
-// import PageAllBars from '@/pages/PageAllBars'
+import PageContact from '@/pages/PageContact'
 import PageProfile from '@/pages/PageProfile'
 import PageBarShow from '@/pages/PageBarShow'
 import PageBarCreate from '@/pages/PageBarCreate'
@@ -28,11 +28,11 @@ const router = new Router({
 				metaTags: [
 					{
 						name: 'description',
-						content: 'Find bars, restaurants & more near you.'
+						content: 'Find bars, restaurants & more near you and the Portland Streetcar on Portland\'s eastside.'
 					},
 					{
 						property: 'og:description',
-						content: 'Find bars, restaurants & more near you on Portland\'s eastside.'
+						content: 'Find bars, restaurants & more near you and the Portland Streetcar on Portland\'s eastside.'
 					}
 				]
 			}
@@ -46,11 +46,11 @@ const router = new Router({
 				metaTags: [
 					{
 						name: 'description',
-						content: 'Search bars, restaurants, and more by the type.'
+						content: 'Find bars by type including breweries, craftbeer, patios and outdoor seating, games, and more.'
 					},
 					{
 						property: 'og:description',
-						content: 'Search bars, restaurants, and more by the type.'
+						content: 'Find bars by type including breweries, craftbeer, patios and outdoor seating, games, and more.'
 					}
 				]
 			}
@@ -77,11 +77,11 @@ const router = new Router({
 				metaTags: [
 					{
 						name: 'description',
-						content: 'View the full list of bars, restaurants & more near Portland\'s eastside streetcar loop.'
+						content: 'View our full list of bars, restaurants & more located near Portland\'s eastside streetcar loop.'
 					},
 					{
 						property: 'og:description',
-						content: 'View the full list of bars, restaurants & more near Portland\'s eastside streetcar loop. Find your next stop.'
+						content: 'View our full list of bars, restaurants & more located near Portland\'s eastside streetcar loop.'
 					}
 				]
 			}
@@ -111,12 +111,12 @@ const router = new Router({
 				]
 			}
 		},
-		// {
-		// 	path: '/bar-type/:beers-on-tap',
-		// 	name: 'PageType',
-		// 	component: PageType,
-		// 	props: true
-		// },
+		{
+			path: '/contact',
+			name: 'PageContact',
+			component: PageContact,
+			props: true
+		},
 		{
 			path: '/bar/create/:typeId',
 			name: 'PageBarCreate',
@@ -125,6 +125,7 @@ const router = new Router({
 			meta: {requiresAuth: true}
 		},
 		{
+			// path: '/bar/:id',
 			path: '/bar/:id',
 			name: 'PageBarShow',
 			component: PageBarShow,
@@ -214,46 +215,43 @@ const router = new Router({
 	mode: 'history'
 })
 // This callback runs before every route change, including on page load.
-router.beforeEach((to, from, next) => {
-  // This goes through the matched routes from last to first, finding the closest route with a title.
-  // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
-  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title)
+// router.beforeEach((to, from, next) => {
+//   // This goes through the matched routes from last to first, finding the closest route with a title.
+//   // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
+//   const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title)
 
-  // Find the nearest route element with meta tags.
-  const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags)
-  // const previousNearestWithMeta = from.matched.slice().reverse().find(r => r.meta && r.meta.metaTags)
-  // console.log(previousNearestWithMeta)
-  // If a route with a title was found, set the document (page) title to that value.
-  if (nearestWithTitle) document.title = nearestWithTitle.meta.title
+//   // Find the nearest route element with meta tags.
+//   const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags)
+//   // const previousNearestWithMeta = from.matched.slice().reverse().find(r => r.meta && r.meta.metaTags)
+//   // console.log(previousNearestWithMeta)
+//   // If a route with a title was found, set the document (page) title to that value.
+//   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
 
-  // Remove any stale meta tags from the document using the key attribute we set below.
-  Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el))
+//   // Remove any stale meta tags from the document using the key attribute we set below.
+//   Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el))
 
-  // Skip rendering meta tags if there are none.
-  if (!nearestWithMeta) return next()
+//   // Skip rendering meta tags if there are none.
+//   if (!nearestWithMeta) return next()
 
-  // Turn the meta tag definitions into actual elements in the head.
-  nearestWithMeta.meta.metaTags.map(tagDef => {
-    const tag = document.createElement('meta')
+//   // Turn the meta tag definitions into actual elements in the head.
+//   nearestWithMeta.meta.metaTags.map(tagDef => {
+//     const tag = document.createElement('meta')
 
-    Object.keys(tagDef).forEach(key => {
-      tag.setAttribute(key, tagDef[key])
-    })
+//     Object.keys(tagDef).forEach(key => {
+//       tag.setAttribute(key, tagDef[key])
+//     })
 
-    // We use this to track which meta tags we create, so we don't interfere with other ones.
-    tag.setAttribute('data-vue-router-controlled', '')
-
-    return tag
-  })
-  // Add the meta tags to the document head.
-  .forEach(tag => document.head.appendChild(tag))
-
-  next()
-})
+//     // We use this to track which meta tags we create, so we don't interfere with other ones.
+//     tag.setAttribute('data-vue-router-controlled', '')
+//     return tag
+//   })
+//   // Add the meta tags to the document head.
+//   .forEach(tag => document.head.appendChild(tag))
+//   next()
+// })
 
 router.beforeEach((to, from, next) => {
-	console.log(`🚦navigating to ${to.name} from ${from.name}`)
-
+	console.log(`DIRECTING: 🚦navigating to ${to.name} from ${from.name} from index router page`)
 	store.dispatch('auth/initAuthentication')
 	.then(user => {
 		if (to.matched.some(route => route.meta.requiresAuth)) {
@@ -266,7 +264,7 @@ router.beforeEach((to, from, next) => {
 			if (!user) {
 				next()
 			} else {
-				next({name: 'PageHome'})
+				next({name: 'PageLogin', query: {redirectTo: to.path}})
 			}
 		} else {
 			next()

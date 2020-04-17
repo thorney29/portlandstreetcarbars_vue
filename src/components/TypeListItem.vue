@@ -1,23 +1,19 @@
 <template>
     <div class="type-list-item">
         <div class="card-body">
-          <!--   <router-link 
-            class="type-name"
-            :to="{name: 'PageType', params: {id : this.type['.key'], slug: this.type.slug}}">
-                <h2>{{type.name}}</h2>
-            </router-link> -->
-             <router-link 
+            <router-link 
             class="type-name"
             :to="{name: 'PageType', params: {id : this.type['.key']}}">
                 <h2>{{type.name}}</h2>
                 <h3 class="type-description">{{type.description}}</h3>
                 <div class="icon"><i class="fas fa-type.icon">{{ type.icon }}</i></div>
             </router-link>
-         </div>
+        </div>
         <div class="bar-count">
-            <p class="count text-lead">
-            {{BarsCount}}
-            {{BarsCount === 1 ? 'bar': 'bars'}}</p> 
+            <p class="count">
+            <em>{{BarsCount}}
+            {{BarsCount === 1 ? 'option': 'options'}}</em>
+            </p> 
         </div>
     </div>
 </template>
@@ -29,11 +25,6 @@ export default {
 			required: true,
 			type: Object
 		}
-        // ,
-        //  id: {
-        //     type: String,
-        //     required: true
-        // }
 	},
     data () {
         return {
@@ -44,9 +35,6 @@ export default {
 		BarsCount () {
 			return countObjectProperties(this.type.bars)
 		}
-        // BarsCount (bar) {
-        //     return this.$store.getters['bars/BarsCount'](this.bar['.key'])
-        // }
 	}
 }
 </script>
@@ -85,14 +73,38 @@ export default {
         border-radius: 50%;
         margin: 1% auto;
     }
-    svg.svg-inline--fa.fa-beer.fa-w-14,
+   /* svg.svg-inline--fa.fa-beer.fa-w-14,
     svg.svg-inline--fa.fa-cocktail.fa-w-18,
     svg.svg-inline--fa.fa-wine-glass-alt.fa-w-9 {
         color: #0c6534;
         padding: 4px;
         font-size: 3rem;
-    }
+    }*/
     svg.svg-inline--fa.fa-beer.fa-w-14{
         margin-left: 13%;
+    }
+    @media (max-width:580px) {
+        .type-list-item h2 {
+            font-size: 2.3rem !important;
+        }
+        .icon {
+            height: 90px;
+            width:90px;
+        }
+        svg.svg-inline--fa.fa-coffee.fa-w-20, 
+        svg.svg-inline--fa.fa-umbrella-beach.fa-w-20, 
+        svg.svg-inline--fa.fa-biking.fa-w-20, 
+        svg.svg-inline--fa.fa-hamburger.fa-w-16, 
+        svg.svg-inline--fa.fa-beer.fa-w-14, 
+        svg.svg-inline--fa.fa-cocktail.fa-w-18, 
+        svg.svg-inline--fa.fa-music.fa-w-16, 
+        svg.svg-inline--fa.fa-football-ball.fa-w-16, 
+        svg.svg-inline--fa.fa-wine-glass-alt.fa-w-9, 
+        svg.svg-inline--fa.fa-utensils.fa-w-13, 
+        svg.svg-inline--fa.fa-glass-cheers.fa-w-20, 
+        svg.svg-inline--fa.fa-dice.fa-w-20 {
+            font-size: 3em;
+        }
+        .type-name h2 {  -webkit-text-stroke: 1px;}
     }
 </style>    

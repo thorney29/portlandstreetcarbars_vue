@@ -49,27 +49,28 @@ export default {
 			const bar = state.items[id]
 			if (bar.contributors) {
 				const contributorIds = Object.values(bar.contributors)
-				console.log('contributorIds')
-				console.log(contributorIds)
+				// console.log('contributorIds')
+				// console.log(contributorIds)
 				const user = rootState.auth.authId
-				console.log(user)
+				// console.log(user)
 				const userIsContributor = contributorIds.filter(function (contributor) {
 					return contributor === user
 				})
 				for (var key in userIsContributor) {
 					var value = userIsContributor[key]
+					console.log(value)
 				}
 				// console.log(value)
-				console.log(value)
-				console.log('userIsContributor')
-				console.log(userIsContributor)
+				// console.log(value)
+				// console.log('userIsContributor')
+				// console.log(userIsContributor)
 				return value
 			}
 		}
 		// barFavoritesCount: state => id => countObjectProperties(state.items[id].favorites)
 	},
 	actions: {
-		createBar ({state, commit, dispatch, rootState}, {typeId, title, image, address, directionsUrl, typeIds, notes, text, toGoValue,
+		createBar ({state, commit, dispatch, getters, rootState}, {typeId, title, image, address, directionsUrl, typeIds, notes, text, toGoValue,
 					favoriteValue}) {
 			return new Promise((resolve, reject) => {
 				const barId = firebase.database().ref('bars').push().key
@@ -96,17 +97,47 @@ export default {
 				// console.log('bar')
 				// console.log(bar)
 				// console.log(typeIds)
+
 				bar.favorites[favoriteId] = favoriteId
 				const favorite = {text, publishedAt, barId, userId, favoriteValue, toGoValue}
 				// console.log(favorite)
 				const updates = {}
 				updates[`bars/${barId}`] = bar
 
-				updates[`types/${typeId}/bars/${barId}`] = barId
+				// updates[`types/${typeId}/bars/${barId}`] = barId
 				updates[`users/${userId}/barsCreated/${barId}`] = barId
 
 				updates[`favorites/${favoriteId}`] = favorite
 				// updates[`users/${userId}/favorites/${favoriteId}`] = favoriteId
+				let nullArray = []
+				let typesArray = []
+				let typeIdValues = Object.values(typeIds)
+				let typesName = ''
+				console.log('typeIdValues from object values typeIds')
+				console.log(typeIdValues)
+				for (let i = 0; i < typeIdValues.length; i++) {
+					if (typeIdValues[i] === 'null') {
+						nullArray.push(typeIdValues[i])
+					} else {
+					typesArray.push(typeIdValues[i])
+					}
+				}
+				// if (typeIdValues[i] !== 'null' || typeIdValues[i] !== null || typeIdValues[i] !== '"null"') {
+					for (let j = 0; j < typesArray.length; j++) {
+						// console.log('typesArray[i] if null should not be added')
+						// console.log(typesArray[i])
+						// if (typesArray[i] === '"null"' || typesArray[i] === null || typesArray[i] === 'undefined' || typesArray[i] === undefined) {
+						// 	console.log('this is null')
+						// 	// do nothing
+						// } else {
+							// if (typesArray[i] !== '"null"' || typesArray[i] !== null || typesArray[i] !== 'undefined' || typesArray[i] !== undefined) {
+							// console.log('this type should not be null')
+							// console.log(typesArray)
+							typesName = typesArray[j]
+							updates[`types/${typesName}/bars/${barId}`] = barId
+						// }
+					}
+				// }
 				firebase.database().ref().update(updates)
 				.then(() => {
 					// Update bar
@@ -163,6 +194,7 @@ export default {
 				firebase.database().ref().update(updates)
 				.then(() => {
 					commit('setBar', {bar: {...bar, title}, barId: id})
+					// commit('types/setType', {parentId: typeId, childId: id})
 					commit('favorites/setFavorite', {favoriteId: bar.favoriteId, favorite: {...favorite, text, edited, favoriteValue, toGoValue}}, {root: true})
 					// commit('types/appendBarToType', {parentId: typeId, childId: id}, {root: true})
 					resolve(favorite)

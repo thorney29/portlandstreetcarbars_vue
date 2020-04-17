@@ -14,10 +14,6 @@
 			TypeListItem
 		},
 		props: {
-			// id: {
-			// 	required: false,
-			// 	type: String
-			// },
 			types: {
 				required: true,
 				type: Array
@@ -27,4 +23,5 @@
 </script>
 
 <style scoped>
+
 </style>

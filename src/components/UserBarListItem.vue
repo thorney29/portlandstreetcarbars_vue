@@ -1,27 +1,23 @@
 <template v-if="bar">
 	<div v-if="userIsContributor" class="card">
-			<img class="card-img-top" :src="bar.image" alt="Card image cap">
+	<!-- <div class="card"> -->
+			<img class="card-img-top" :src="'/static/assets/img/small/' + bar.image"  alt="Card image cap">
       		<!-- Heading -->
 			<div class="wrapper">       
-				<!-- 	<router-link :to="{name: 'PageBarShow', params: {id: bar['.key'], name: bar.slug}}">
-						<h2>{{bar.title}}</h2>
-				</router-link> -->
-					<router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}">
+				<router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}">
 					<h2 class="sparkle u-hover--sparkle">{{bar.title}}</h2>
 				</router-link>
 			</div>
 			
-			<p><!-- Bar Icons -->
-				<ul class="icons">
-				  <li v-for="(item, key, index) in bar.icons" v-if="item !== 'null'">
-				  <i class="fas fa-item">{{ item }}</i>
-				  </li>
-				</ul>
-			</p>
 			<!-- Bar Favorite Count -->
 			<p class="favorited" style="text-align: center;">
+				<span v-if="barFavoritesCount === 0" class="inactive">
 				<i class="fas fa-heart"></i>
-				{{barFavoritesCount}} {{barFavoritesCount === 1 ? 'favorite': 'favorites' }} 
+				</span>
+				<span v-if="barFavoritesCount > 0" class="active">
+					<i class="fas fa-heart"></i>
+					<span>  &nbsp; {{barFavoritesCount}}  </span>
+				</span>
 			</p>
 			<!-- click to view -->
 			<div v-show="!isShowing">
@@ -30,33 +26,16 @@
 			<div v-show="isShowing">
 			 <button class="btn-green show-less" @click="isShowing ^= true">Show Less</button>
 			</div>
-			 <div v-show="isShowing">
+			 <div v-show="isShowing" class="showMoreDetails">
 				<div class="address">
 					<p>{{bar.address}}</p>					
 					<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
 				</div>				
-			<!-- 	<div v-if="!user" class="text-center" style="margin-bottom: 50px">
-					<router-link :to="{name: 'PageLogin', query: {redirectTo: $route.path}}">Login</router-link>&nbsp;or&nbsp;
-					<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save a favorite and add notes.
-				</div> -->
 				<div>
-			 		<!-- <div  v-if="!isFavorite && user">
-				 			<router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}">
-								<p>Edit </p>
-							</router-link>	
-						<FavoriteEditor
-						@save="editing = false"
-						@cancel="editing = false"
-						:user="user"
-						:barId="id"
-						/> 
-					</div> -->
-			 		<!-- 	<div v-else-if="isFavorite && user"> -->
-			 			<FavoriteList 
-						:favorites="favorites"
-						v-if="favorite !== null"
-						/>
-				<!--  	</div> -->
+		 			<FavoriteList 
+					:favorites="favorites"
+					v-if="favorite !== null"
+					/>
 				</div>
 				<button class="btn" @click="navigate(bar.title)">Get Directions</button>
 			</div>
@@ -199,7 +178,7 @@
 				for (var key in isFavorite) {
 					var value = isFavorite[key]
 				}
-				console.log(value)
+				// console.log(value)
 				return value
 			}
 		},
@@ -230,13 +209,31 @@
 	}
 </script>
 <style scoped>
-	.card {
+.card {
 		width: 48%;
 		margin: 1%;
 		text-align: center;
 		padding: 10px;
 		height: 100%;
+		background: white;
 	}
+	-webkit-flex: 1;
+	.active {color:red;}
+	.showMoreDetails {
+		border: #54b09b 10px dotted;
+	    padding: .8rem;
+	    margin: 7% auto 0;
+	}
+	@media (max-width:580px) {
+		.card {width: 320px;margin:4% auto;}
+		.sparkle {
+	        max-width: 100%;    
+	    }
+	}
+
+	/*.yellow-border {
+		border: 3px solid yellow;
+	}*/
 	.wrapper {
 		text-align: center;
 	}
@@ -266,7 +263,7 @@
 	.u-hover--sparkle {
 	  box-sizing: border-box;
 	  position: relative;
-	  padding: 0.75em;
+	  padding: 0.75em .35em;
 	}
 	.u-hover--sparkle::before, .u-hover--sparkle::after {
 	  content: '';
@@ -297,58 +294,27 @@
 			background-position: 200% center;
 		}
 	}
-	.card {
-		background: white;
-	}
-	.card .card {
-		width: 100%;
-		margin: 1% auto;
-	}
 	.card-img-top {
 		width: 100%;
-		height: 60%;
 		object-fit: cover;
 		object-position: center;
 	}
-	ul.icons {
-		display: flex;
-		justify-content: center;
-		margin: 3% auto;
+
+	.showMoreDetails {
+		.showMoreDetails {
+		/*border: #54b09b 10px dotted;
+	    padding: .8rem;*/
+	    margin: 7% 3%;
+	    width: 94%;
+	    padding: .8rem;
+	    padding: 20px 0;
+	    border-style: dotted;
+	    border: 10px solid;
+		border-color: #54b09b; 
+		border-image-source: url('../assets/img/svg/dots.svg');;
+		border-image-slice:33% 33%; 
+		border-image-repeat:round; 
 	}
-	ul.icons li {
-		list-style: none;
-	    align-items: center;
-	    align-content: center;
-	    align-self: center;
-	    border: 2px solid #0c6534;
-	    height: 40px;
-	    width: 40px;
-	    display: flex;
-	    justify-content: center;
-	   
-	    border-radius: 50%;
-	    margin:1%;
-	}
-	svg.svg-inline--fa.fa-umbrella-beach.fa-w-20,
-	svg.svg-inline--fa.fa-biking.fa-w-20,
-	svg.svg-inline--fa.fa-utensils.fa-w-13,
-	svg.svg-inline--fa.fa-beer.fa-w-14,
-	svg.svg-inline--fa.fa-cocktail.fa-w-18,
-	svg.svg-inline--fa.fa-music.fa-w-16,
-	svg.svg-inline--fa.fa-wine-glass-alt.fa-w-9 {
-	    color: #0c6534;
-	    padding: 4px;
-	    font-size: 2rem;
-	}
-	svg.svg-inline--fa.fa-umbrella-beach.fa-w-20 {
-		 font-size: 1.6rem;
-	}
-	svg.svg-inline--fa.fa-biking.fa-w-20,
-	svg.svg-inline--fa.fa-music.fa-w-16 {
-		 font-size: 1.8rem;
-	}
-	svg.svg-inline--fa.fa-beer.fa-w-14{
-	    margin-left: 13%;
 	}
 	.barNotes {
 		border-top: 1px dashed black;
@@ -362,4 +328,101 @@
 	.icon-details {text-align: right;}
 	.favorited {color: red;margin: 3% auto;}
 	.show-less {margin: 2% auto;}
+
+	/* card code */
+	.flex-item.card{
+	  display: flex;
+	  padding: .5rem;
+	  width: 320px;
+	  height: auto;
+	  border-top-left-radius: 0.25rem;
+	  border-top-right-radius: 0.25rem;
+	}
+	@media (min-width: 540px) {
+	  .flex-item.card{
+		width: 419px;
+	  }
+	}
+	@media (min-width: 56rem) {
+	  .flex-item.card {
+	    /*flex: 0 0 33.11111%*/
+	  }
+	}
+	.card-details {
+	  background-color: white;
+	  border-radius: 0.25rem;
+	  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  overflow: hidden;
+	  flex: 0 0 100%;
+	}
+	.card:hover .card__image {
+	  -webkit-filter: contrast(100%);
+	          filter: contrast(100%);
+	}
+	.card__content {
+	  display: flex;
+	  flex: 1 1 auto;
+	  flex-direction: column;
+	  padding: 1rem;
+	  text-align: center;
+	}
+	.card__image {
+	  background-position: center center;
+	  background-repeat: no-repeat;
+	  background-size: cover;
+	  border-top-left-radius: 0.25rem;
+	  border-top-right-radius: 0.25rem;
+	  -webkit-filter: contrast(70%);
+	          filter: contrast(70%);
+	  overflow: hidden;
+	  position: relative;
+	  transition: -webkit-filter 0.5s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+	  transition: filter 0.5s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+	  transition: filter 0.5s cubic-bezier(0.43, 0.41, 0.22, 0.91), -webkit-filter 0.5s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+	}
+	.card__image::before {
+	  content: "";
+	  display: block;
+	  padding-top: 56.25%;
+	}
+	ul.icons li:hover {
+	    background:black;
+	}
+	svg.svg-inline--fa:hover {
+	    color:#fff !important;
+	}
+	svg.svg-inline--fa.fa-heart.fa-w-16:hover {
+	    color: red !important;
+	}
+	@media (min-width: 40rem) {
+	  .card__image::before {
+	    padding-top: 66.6%;
+	  }
+	}
+	.card-header {
+		flex: 0 1 100%;
+		-webkit-flex: 1;
+	}
+	.wrapper {
+	  color: #696969;
+	  font-size: 1.25rem;
+	  font-weight: 300;
+	  letter-spacing: 2px;
+	  text-transform: uppercase;
+	}
+	.card__text {
+	  flex: 1 1 auto;
+	  font-size: 0.875rem;
+	  line-height: 1.5;
+	  margin-bottom: 1.25rem;
+	}
+	@media (max-width:736px) {
+		.card {width: 320px;margin:4% auto;}
+		.sparkle {
+	        max-width: 100%;    
+	    }
+	}
 </style>

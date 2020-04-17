@@ -1,5 +1,5 @@
 <template>
-	<div v-if="asyncDataStatus_ready" class="col-large push-top">
+	<div  v-if="asyncDataStatus_ready" class="col-large push-top">
 		<div class="card">
 			<div v-if="user">
 				<div v-if="user.permissions === 'admin'">
@@ -13,8 +13,17 @@
 				</div>
 			</div>
 			<h1>{{bar.title}}</h1>
-			<img class="card-img-top" :src="bar.image" alt="Card image cap">
-
+			<img class="card-img-top" :src="'/static/assets/img/bars/' + bar.image" alt="Card image cap">
+			<p class="favorited" style="text-align: center;">
+					<span v-if="barFavoritesCount === 0" class="inactive">
+					<i 	class="fas fa-heart"></i>
+					</span>
+					<span v-if="barFavoritesCount > 0" class="active">
+						<i class="fas fa-heart"></i>
+						<span>  &nbsp; {{barFavoritesCount}}  </span>
+					</span>
+				</p>
+				<div class="details">
 			 	<ul class="icons">
 					<template
 					  v-for="(typeId, key, index) in bar.typeIds">
@@ -35,48 +44,43 @@
 					</template>
 				</ul>
 
-			<p style="text-align: center" class="barAddress">{{bar.address}}</p>
-			<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
-			<p class="favorited" style="text-align: center;">
-				<i class="fas fa-heart"></i>
-				{{barFavoritesCount}} {{barFavoritesCount === 1 ? 'favorite': 'favorites' }} 
-			</p>
-		
-		<div v-if="!user" class="text-center">
-			<em><router-link :to="{name: 'PageLogin', query: {redirectTo: $route.path}}"> Login </router-link>&nbsp;or&nbsp;
-			<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save a favorite and add notes.</em>
-		</div>
-		<!-- if this is a user favorite --> 
-		<!-- then show the following List of User Favorites -->	 
-		<div v-else class="card" style="border: 2px solid #ccc;padding: 20px;">
-	 		<div  v-if="!isFavorite">
-				<FavoriteEditor
-				@save="editing = false"
-				@cancel="editing = false"
-				:user="user"
-				:barId="id"
-				/> 
+				<p style="text-align: center" class="barAddress">{{bar.address}}</p>
+				<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
+
+				
+				<div v-if="!user" class="text-center">
+					<em><router-link :to="{name: 'PageLogin', query: {redirectTo: $route.path}}"> Login </router-link>&nbsp;or&nbsp;
+					<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save a favorite and add notes.</em>
+				</div>
+				<!-- if this is a user favorite --> 
+				<!-- then show the following List of User Favorites -->	 
+				<div v-else class="card inner">
+			 		<div  v-if="!isFavorite">
+						<FavoriteEditor
+						@save="editing = false"
+						@cancel="editing = false"
+						:user="user"
+						:barId="id"
+						/> 
+					</div>
+			 		<div v-else-if="isFavorite">
+			 			<FavoriteList 
+						:favorites="favorites"
+						v-if="favorite !== null"
+						/>
+				 	</div>
+				</div>
+				<p>
+					<a class="btn-green" target="_blank" :href="bar.directionsUrl">Get Directions</a>
+				</p>
+				</div>
 			</div>
-	 		<div v-else-if="isFavorite">
-	 			<FavoriteList 
-				:favorites="favorites"
-				v-if="favorite !== null"
-				/>
-		 	</div>
-		</div>
-		
-			<p>
-				<a class="btn-green" target="_blank" :href="bar.directionsUrl">Get Directions</a>
-			</p>
-		</div>
-			<hr>
-		<div style="margin: auto;display: table;margin: auto;" class="btn hvr-pop">
-			<router-link
-				:to="{name: 'PageDirections'}">
-				Go Back to All Bars
-			</router-link>
-		</div>
-	
+			<div style="margin: auto;display: table;margin: auto;" class="btn hvr-pop">
+				<router-link
+					:to="{name: 'PageDirections'}">
+					Go Back to All Bars
+				</router-link>
+			</div>
 	</div>
 </template>
 
@@ -110,17 +114,25 @@
 		data () {
 	        return {
 				editing: false,
+				title: this.bar ? this.bar.title : '',
+				image: this.bar ? this.bar.image : '',
 				address: this.bar ? this.bar.address : '',
 				directionsUrl: this.bar ? this.bar.directionsUrl : '',
 				notes: this.bar ? this.bar.notes : '',
 				favoriteValue: this.favorite ? this.favorite.favoriteValue : '',
 				toGoValue: this.favorite ? this.favorite.toGoValue : '',
-				text: this.bar ? this.bar.text : '',
-				icons: this.bar ? this.bar.icons : ''
+				text: this.bar ? this.bar.text : ''
 				// permissions: this.user ? this.user.permissions : ''
 			}
 		},
 		mixins: [asyncDataStatus],
+
+		methods: {
+			...mapActions('bars', ['fetchBar']),
+			...mapActions('users', ['fetchUser']),
+			...mapActions('favorites', ['fetchFavorites']),
+			...mapActions('types', ['fetchAllTypes'])
+		},
 
 		computed: {
 			// Get user object
@@ -154,43 +166,85 @@
 				// console.log(favorites)
 				return favorites
 			},
+			// favorites () {
+			// 	const favoriteIds = Object.values(this.bar.favorites)
+			// 	const userFavoriteIds = undefined
+			// 	if (this.user.favorites) {
+			// 		const userFavoriteIds = Object.values(this.user.favorites)
+			// 		// console.log(favoriteIds)
+			// 		// console.log(userFavoriteIds)
+			// 		const favorites = Object.values(this.$store.state.favorites.items)
+			// 		.filter(favorite => favoriteIds.includes(favorite['.key']))
+			// 		.filter(favorite => userFavoriteIds.includes(favorite['.key']))
+			// 		// console.log(favorites)
+			// 		return favorites
+			// 	}
+			// 	return userFavoriteIds
+			// },
+
 			// Check to see if this
+			// isFavorite () {
+			// 	const favoriteIds = Object.values(this.bar.favorites)
+			// 	// const userFavoriteIds = null
+			// 	if (this.user.favorites === 'undefined' || this.user.favorites === undefined || this.user.favorites === null) {
+			// 		this.user.favorites = null
+			// 	} else {
+			// 		const userFavoriteIds = Object.values(this.user.favorites)
+			// 		// console.log('favoriteIds')
+			// 		// console.log(favoriteIds)
+			// 		// console.log('userFavoriteIds')
+			// 		// console.log(userFavoriteIds)
+			// 		// const isFavorite = Object.values(this.$store.state.favorites.items)
+			// 		const isFavorite = Object.values(this.favorites)
+			// 		.filter(favorite => favoriteIds.includes(favorite['.key']))
+			// 		.filter(favorite => userFavoriteIds.includes(favorite['.key']))
+			// 		// console.log('isFavorite')
+			// 		// console.log(isFavorite)
+			// 		// console.log(typeof isFavorite)
+			// 		for (var key in isFavorite) {
+			// 			var value = isFavorite[key]
+			// 		}
+			// 		// console.log('value')
+			// 		// console.log(value)
+			// 		if (value === undefined) {
+			// 			return false
+			// 		} else {
+			// 			return true
+			// 		}
+			// 	}
+			// }
 			isFavorite () {
 				const favoriteIds = Object.values(this.bar.favorites)
-				// const userFavoriteIds = null
-				// if (this.user.favorites) {
-					const userFavoriteIds = Object.values(this.user.favorites)
-				// 	return userFavoriteIds
-				// }
-				// console.log('favoriteIds')
-				// console.log(favoriteIds)
-				// console.log('userFavoriteIds')
-				// console.log(userFavoriteIds)
-				// const isFavorite = Object.values(this.$store.state.favorites.items)
-				const isFavorite = Object.values(this.favorites)
-				.filter(favorite => favoriteIds.includes(favorite['.key']))
-				.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-				// console.log('isFavorite')
-				// console.log(isFavorite)
-				// console.log(typeof isFavorite)
-				for (var key in isFavorite) {
-					var value = isFavorite[key]
-				}
-				// console.log('value')
-				// console.log(value)
-				if (value === undefined) {
-					return false
+				if (this.user.favorites === 'undefined' || this.user.favorites === undefined || this.user.favorites === null) {
+					this.user.favorites = null
 				} else {
-					return true
+					if (this.user.favorites) {
+						const userFavoriteIds = Object.values(this.user.favorites)
+
+						// console.log('favoriteIds')
+						// console.log(favoriteIds)
+						// console.log('userFavoriteIds')
+						// console.log(userFavoriteIds)
+						// const isFavorite = Object.values(this.$store.state.favorites.items)
+						const isFavorite = Object.values(this.favorites)
+						.filter(favorite => favoriteIds.includes(favorite['.key']))
+						.filter(favorite => userFavoriteIds.includes(favorite['.key']))
+						// console.log('isFavorite')
+						// console.log(isFavorite)
+						// console.log(typeof isFavorite)
+						for (var key in isFavorite) {
+							var value = isFavorite[key]
+						}
+						// console.log('value')
+						// console.log(value)
+						if (value === undefined) {
+							return false
+						} else {
+							return true
+						}
+					}
 				}
 			}
-		},
-
-		methods: {
-			...mapActions('bars', ['fetchBar']),
-			...mapActions('users', ['fetchUser']),
-			...mapActions('favorites', ['fetchFavorites']),
-			...mapActions('types', ['fetchAllTypes'])
 		},
 
 		created () {
@@ -232,28 +286,33 @@
 	color: black;
 	font-style: normal;
 	font-family: 'Megrim', cursive;
-	/*font-family: 'Bungee Inline', cursive;*/
 	font-size: 2.6rem;
 	}
 	p {margin: 2% auto;}
 	.card {
 	    background: white;
-	    border: 1px solid #666;
 	    width: 55%;
 	    margin: 1% auto;
 	    text-align: center;
-	    padding: 10px;
 	    background: #f5f5f5;
 	}
-	img {
-	width: 100%;
+	.card.inner {
+		width: 67%;
 	}
-	
-	/*.svg-inline--fa.fa-item {display: none;}*/
-	/* this has to be done using jquery or delete the empty key*/
-	/*.barNotes  {
-	font-family: 'Zeyada', cursive;
-	}*/
+	img {
+		width: 100%;
+	}
+	.details {
+	    padding: .8rem;
+	    padding: 20px 0;
+	    border-style: dotted;
+	    border: 10px solid;
+		border-color: #54b09b; 
+		border-image-source: url('../assets/img/svg/dots.svg');;
+		border-image-slice:33% 33%; 
+		border-image-repeat:round; 
+	}
+	.barAddress {margin: 4% auto;}
 	.favorite__heart {
 		position: relative;
 		padding: 3px;
@@ -282,7 +341,34 @@
 	.favorited {
 		color: red;
 	}
+	ul.icons li:hover {
+	    background:black;
+	}
+	svg.svg-inline--fa:hover {
+	    color:#fff !important;
+	}
+	svg.svg-inline--fa.fa-heart.fa-w-16:hover {
+	    color: red !important;
+	}
 	hr {
 		margin: 8% auto;
+	}
+	@media (max-width: 580px) {
+		.card {
+	        width: initial !important;
+	        border: none !important;
+	    }
+	    .details {
+	    	width: 90%;
+	    	margin: auto auto 9%;
+	    }
+	    .card.inner {
+			width: 90%;
+			margin: auto;
+		}
+	    h1 {
+		    font-size: 3.4rem;
+		    margin: -2% auto 5%;
+		}
 	}
 </style>

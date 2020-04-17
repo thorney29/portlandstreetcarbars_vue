@@ -5,6 +5,7 @@
     <title></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://unpkg.com/native-toast@1.2.1/dist/native-toast.js"></script>
+    <!-- I don't think this is being used. maybe remove? -->
     <link rel="stylesheet" href="https://unpkg.com/native-toast@1.2.1/dist/native-toast.css">
 
     <link href="https://fonts.googleapis.com/css?family=Baumans|Bungee+Inline|Gochi+Hand|Megrim|Open+Sans|Over+the+Rainbow|Staatliches|Vibes|Zeyada&display=swap" rel="stylesheet">
@@ -12,7 +13,15 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@1.5.14/dist/vuetify.min.css">
+    <!-- this is for the email api that I added for the contact form. It's a service and as such is a placeholder until I can convert the contact from from tresahorney.com -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.3.2/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("user_Wh5OPWTqmBtxSFAYO0v7N");
+       })()
+    </script>
 
+    <base href="/" />
 
   </head>
   <body>

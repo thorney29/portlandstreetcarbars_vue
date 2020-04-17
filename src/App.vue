@@ -1,7 +1,7 @@
 <template>
    <div id="app">
    	<TheNavbar/>
-    <div class="container-fluid">
+    <div id="masterContainerFluid" class="container-fluid">
 		<router-view :key="$route.path" v-show="showPage" @ready="pageReady"/>
 		<AppSpinner v-show="!showPage" />
 		</div>

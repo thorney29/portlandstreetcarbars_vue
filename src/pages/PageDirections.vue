@@ -27,8 +27,7 @@
 					</span>
 				</h3> 
        		</div>
-
-					
+				
    			<div v-if="seeSearch">
 			 	<p><input type="text" v-model="search" value="Rum Club" placeholder="Search by name.."/></p>
        		 	<p><label style="padding-top:8px;"><em>Bar name: {{search}}</em></label></p>
@@ -40,21 +39,39 @@
 				   	<input class="searchArea" type="checkbox" :value="type.name" id="tag-type" v-model="selectedTypes"><i class="fa fa-type-icon">{{type.icon}}</i><span>{{type.name}}</span></label>
 			  	</li> 
 		  	</ul>
+
 			<!-- </div> -->
 		  	<p class="filters" v-show="selectedTypes.length !== 0">
 		    	{{selectedTypes.length > 1 ? 'Filters: ': 'Filter: '}}
 	    		<ul style="display: flex;justify-content: flex-start;">
 	    			<li style="display: flex;flex-flow: row nowrap;justify-content: flex-start;white-space: nowrap;" v-for="type in selectedTypes" >
-			    		<span class="filter-label">{{type}}</span>
+			    		<span class="filter-label">{{type}} ({{filteredList.length}})</span>
 			  			<span class="addAnother" style="margin:auto;padding: 2px 4px 0;font-size: 12px;" v-if="selectedTypes.length > 1">
 			  			<i class="fas fa-plus-circle"></i></span>
 		  			</li>
 	  			</ul>
 		  	</p>
 		</div>
+		<!-- This is for the return to top and search bar -->
+			<div id="staticReturnTop">
+				<div id="more" @click="isShowing ^= true" v-show="!isShowing">
+					<i class="fas fa-ellipsis-h"></i>
+				</div>
+				<div id="fixedIcons" v-show="isShowing">
+					<div id="close" @click="isShowing ^= true">
+						<i class="far fa-times-circle"></i></div>
+					<div id="returnTop" v-show="isShowing" view-scroll-to="el:'#MainContainerFluid'" @click="scrollTop">
+						<i class="fas fa-arrow-up"></i>
+						</div>
+					<div id="staticSearch" v-show="isShowing" @click="showSearch ^= true"><i class="fas fa-search"></i>
+					</div>
+					<input id="showSearchInput" v-show="showSearch" type="text" v-model="search" placeholder="Search bars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'enter your text'"/>
+				</div>
+			</div>
 		<div class="all-bars-directions">
 			<!-- get the results of the search
-			* default is empty string -- all bars shown -->
+			* default is empty string. all bars shown -->
+
 			<AllBarList :bars="filteredList"/>
 		</div>
 	</div>
@@ -64,12 +81,10 @@
 	import {mapActions, mapGetters} from 'vuex'
 	import AllBarList from '@/components/AllBarList'
 	import asyncDataStatus from '@/mixins/asyncDataStatus'
-
 	export default {
 		components: {
 			AllBarList
 		},
-
 		props: {
 		},
 		data () {
@@ -79,18 +94,16 @@
 				search: '',
 				seeSearch: false,
 				seeFilter: false,
-				upHere: false
+				upHere: false,
+				isShowing: false,
+				showSearch: false
 			}
 		},
 		mixins: [asyncDataStatus],
-
 		computed: {
 			types () {
 				return Object.values(this.$store.state.types.items)
 			},
-			// bars () {
-			// 	return Object.values(this.$store.state.bars.items)
-			// },
 			favorites () {
 				return Object.values(this.$store.state.favorites.items)
 			},
@@ -99,15 +112,7 @@
 			}),
 			// This is for search by name
 			filteredList () {
-				let bars = Object.values(this.$store.state.bars.items)
-
-				// bars.sort(function (a, b) {
-				// 	var textA = a.DepartmentName.toUpperCase()
-				// 	var textB = b.DepartmentName.toUpperCase()
-				// 	return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-				// })
-				// console.log(bars)
-				// if there are no types selected -- zero items in array
+				let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
 				if (this.selectedTypes.length === 0) {
 					// define the bars
 					// review a list of bars and return a specific list of bars that includes the string of letters in the search based on bar titles
@@ -134,6 +139,7 @@
 						bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
 					})
 				} else {
+					return bars
 					// if there is more than one filter selected find all of the bars that have
 				}
 				return bars
@@ -148,36 +154,25 @@
 			isChecked (value) {
 				return this.selectedTypes.includes(value)
 			},
-			mouseover: function () {
-				alert('hi')
-				this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
-				document.getElementsByClassName('li.type-label').style.background = this.mycolor
+			// mouseover: function () {
+			// 	alert('hi')
+			// 	this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
+			// 	document.getElementsByClassName('li.type-label').style.background = this.mycolor
+			// },
+			scrollTop () {
+				window.scrollTo(0, 0)
 			}
 		},
 
 		created () {
-			// get all bars
 			this.fetchAllTypes()
 			this.fetchAllBars()
-			.then(bars => {
-				return Promise.all(bars.map(bar => {
-			// 		// this.fetchUser({id: favorite.userId})
-					console.log('success fetched bars')
-				}))
-			})
+			.then(bars => Promise.all(bars.map(bar => this.favorites)))
+			this.fetchAllFavorites()
+			.then(favorites => Promise.all(favorites.map(favorite => this.favoritesId)))
 			.then(() => {
 					this.asyncDataStatus_fetched()
 			})
-			// this.fetchAllFavorites()
-			// .then(favorites => Object.keys(favorites).map(key => { return favorites[key] }))
-			// .then(favorites => Promise.all(favorites.map(favorite => this.fetchUser({id: favorite.userId}))))
-			// .then(() => {
-			// 	this.asyncDataStatus_fetched()
-			// })
-			// .fetchFavorites({ids: Object.keys(bar.favorites)})
-			// 	.then(() => {
-			// 		this.asyncDataStatus_fetched()
-			// })
 		}
 	}
 </script>
@@ -189,23 +184,22 @@
 	.searchArea,
 	.filterArea {
 		text-align: center;
-		/*border: 1px solid #666;*/
-		width: 70%;
+		width: 100%;
 		margin: 2% auto;
 		padding: .825em;
 	}
+	.filterArea {width: 90%}
 	p input{
 		border: 1px solid #ccc;
 	    width: 100%;
 	    text-align: center;
 	    padding: .625em;
 	}
-	.filterArea {width: 90%}
 	.type-label {
 		background: transparent; 
 		display: inline;
 		padding: 10px;
-		margin:2%;
+		margin: 1%;
 		position: relative;
 	}
 	.searchArea>h3 {
@@ -224,13 +218,12 @@
 		cursor: pointer;
 		border: 5px solid transparent;
 		display: flex;
+		margin: auto 1px;
 	}
 	li.type-label.checkedtype{
 		border: 5px #BCDE1E solid;
 	    cursor: pointer;
-	   /* box-shadow: 0px 1px 7px rgba(0,0,0,.5);*/
-	    height: 150px;
-	    margin:auto 1px;
+	    margin: auto 1px;
 	}
 	li.type-label:hover{
      background-color: #B2D414;
@@ -271,7 +264,6 @@
 		margin: 2.6% auto;
 	}
 	.filter-label {
-		/*border: limegreen 2px solid;*/
 		padding: .625em;
 		margin: auto 1%;
 		text-align: center;
@@ -279,35 +271,117 @@
 		font-size: 14px;
 	}
 	@media (max-width: 1244px) {
-	    
 	    .searchArea>h3 {
 	        font-size: 2vw;
-	    }
-	    ul.filterArea.flex-grid.types {
-	    	height: 178px;
 	    }
 	    li.type-label {
 	        -webkit-box-flex: 1;
 	        -ms-flex: 1;
 	        flex: 1;
 	        cursor: pointer;
-	       /* border: 5px solid transparent;*/
 	        display: -webkit-box;
 	        display: -ms-flexbox;
 	        display: flex;
 	        border: 5px transparent double;
-	      /*  border-right: 5px ;*/
 	        cursor: pointer;
-	        margin: auto;
+	        margin: 0;
 	        height: 90%;
-	        /* -webkit-box-shadow: 0px 1px 7px rgba(0,0,0,.5); */
-	        /* box-shadow: 0px 1px 7px rgba(0,0,0,.5); */
 	    }
-	   /* li.type-label:last-of-type {
-	        border-right: 5px #BCDE1E double;
-	    }*/
+	   
 	     li.type-label span {
 	        font-size: 1.8vw;
 	     }
+	 }
+     @media screen and (max-width: 1024px) {
+     	 li.type-label { 
+     	 	flex: 0;
+     	 	height: 100px;
+     	 }
+		.type-label label {
+			flex: 1; 
+		}
+	}
+	@media (max-width: 580px) {
+		.searchArea>h3 {
+		    font-size: 3vw;
+		}
+		.type-label {
+		    padding: 8px;
+		}
+	}
+	#staticReturnTop {
+		display:flex;
+		justify-content:flex-end;
+		right:40px;
+		bottom: 15px;
+		position: fixed;
+		z-index: 1000;
+	}
+	#staticReturnTop .far,
+	#staticReturnTop .fas {
+		width:45px;
+		height: 45px;
+		text-align: center;
+		font-size: 2rem;
+		border-radius:50%;
+	}
+	#more {
+		width:48px;
+		height: 45px;
+		text-align: center;
+		font-size: 2rem;
+		border-radius:50%;
+		background: #9DC216;
+		color:white;
+	}
+	#fixedIcons {
+		display: flex;
+		flex-flow:row;
+		justify-content: flex-end;
+		width: 100%;
+	}
+	#close {
+		order: 3;
+		background: black;
+		width:48px;
+		height: 45px;
+		text-align: center;
+		font-size: 2rem;
+		border-radius:50%;
+		color:white;
+
+	}
+	#returnTop {
+		background: #4e9c7f;
+		color:white;
+		width:48px;
+		height: 45px;
+		text-align: center;
+		font-size: 2rem;
+		border-radius:50%;
+		order: 2;
+		margin: 0 4px;
+	}
+	#staticSearch {
+		background: orange;
+		color:white;
+		width:48px;
+		height: 45px;
+		text-align: center;
+		font-size: 2rem;
+		border-radius:50%;
+		order:1;
+	}
+	#showSearchInput {
+		position: fixed;
+	    background: #5A183F;
+	    padding: 20px;
+	    bottom: 80px;
+	    max-width: 100%;
+	    width: 100%;
+	    margin: 0;
+	    right: 0;
+	    left: 0;
+	    color:white;
 	}
 </style>

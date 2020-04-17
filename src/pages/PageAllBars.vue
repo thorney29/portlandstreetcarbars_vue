@@ -1,7 +1,7 @@
 <template>
     <div v-if="asyncDataStatus_ready" class="col-full push-top">
 		<h1>All Bars</h1>
-		<p>What's your favorite bar? Who has the best cocktails? Covered bike parking? Patios? Etc.</p>
+		<p>What's your favorite bar? Who has the best cocktails? Where can I find bike parking? A quiet patio? </p>
 		<AllBarList :bars="bars"/>
 	</div>
 </template>

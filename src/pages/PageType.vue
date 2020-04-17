@@ -20,7 +20,7 @@
 		</div>
 		<!-- Display Bar List of this type  -->
 		<div class="col-full">
-			<AllBarList :bars="bars" />
+			<AllBarList :bars="filtered"/>
 		</div>
 	</div>
 </template>
@@ -44,6 +44,7 @@
 		},
 		data () {
 			return {
+				bars: this.type ? this.type.bars : '',
 				admin: this.user ? this.user.permissions : '',
 				search: ''
 			}
@@ -54,15 +55,20 @@
 			...mapGetters({
 				user: 'auth/authUser'
 			}),
+			// types () {
+			// 	return this.$store.state.types.items
+			// },
 			type () {
 				return this.$store.state.types.items[this.id]
 			},
-			bars () {
-				// const getthis = Object.values(this.$store.state.bars.items)
-				// .filter(bar => bar.typeIds[this.id] === this.id)
-				// console.log(getthis)
-				return Object.values(this.$store.state.bars.items)
-				.filter(bar => bar.typeIds[this.id] === this.id)
+			filtered () {
+				let bars = Object.values(this.$store.state.bars.items).filter(bar => bar.typeIds[this.type['.key']] === this.type['.key'])
+				let barArray = []
+				bars.forEach(function (bar) {
+					barArray.push(bar)
+				})
+				bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
+				return bars
 			}
 		},
 
@@ -76,6 +82,7 @@
 			this.fetchType({id: this.id})
 			.then(type => this.fetchBars({ids: type.bars}))
 			.then(bars => Promise.all(bars.map(bar => this.fetchUser({id: bar.userId}))))
+			.then(bars => Promise.all(bars.map(bar => this.favorites)))
 			.then(() => { this.asyncDataStatus_fetched() })
 		}
 	}

@@ -15,14 +15,11 @@
 				<span>{{userFavoritesCount}} {{userFavoritesCount === 1 ? 'favorite' : 'favorites'}} </span>
 				<span>{{userToGoCount}} {{userToGoCount === 1 ? 'bar' : 'bars'}} to visit</span>
 			</div>
-			<!-- <div class="stats">
-				<span>{{userFavoritesCount}} favorites</span>
-				<span>0 want to go</span>
-			</div> -->
 			<hr>
 			<p v-if="user.website" class="text-large text-center"><i class="fa fa-globe"></i> <a href="user.website">{{user.website}}</a></p>
 		</div>
-		<p class="text-xsmall text-faded text-center">Member since june 2003, last visited 4 hours ago</p>
+		<p class="text-xsmall text-faded text-center">Member since {{accountCreatedMonthYear | moment("dddd, MMMM Do YYYY")}}.
+		<!-- , last visited {{lastLoggedIn}} ago</p> -->
 		<div class="text-center">
 			<hr>
 			<router-link
@@ -36,14 +33,24 @@
 </template>
 
 <script>
+
+import VueMoment from 'vue-moment'
 	export default {
+		components: {
+			VueMoment
+		},
 		props: {
 			user: {
 				required: true,
 				type: Object
 			}
 		},
-
+		data () {
+			return {
+				accountCreatedMonthYear: this.user ? this.user['registeredAt'] : ''
+				// lastLoggedIn: lastLoggedIn
+			}
+		},
 		computed: {
 			userThreadsCount () {
 				return this.$store.getters['users/userThreadsCount'](this.user['.key'])
@@ -54,10 +61,6 @@
 			userFavoritesCount () {
 				return this.$store.getters['users/userFavoritesCount'](this.user['.key'])
 			}
-			// },
-			// userStarsCount () {
-			// 	return this.$store.getters['users/userStarsCount'](this.user['.key'])
-			// }
 		}
 	}
 </script>

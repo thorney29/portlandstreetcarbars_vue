@@ -10,7 +10,7 @@ export default {
 	},
 	actions: {
 		fetchAllTypes ({state, commit}) {
-			console.log('🔥', '🗂', 'all')
+			// console.log('🔥', '🗂', 'all')
 			return new Promise((resolve, reject) => {
 				firebase.database().ref('types').once('value', snapshot => {
 					const typesObject = snapshot.val()
