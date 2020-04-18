@@ -46,13 +46,13 @@
 				name="notes">
 			</div>
 			<div class="form-group">
-				<label for="bar_text">Text:</label>
+				<label for="bar_slug">Slug:</label>
 				<input
-				v-model="form.text"
+				v-model="form.slug"
 				type="text"
-				id="bar_text"
+				id="bar_slug"
 				class="form-input"
-				name="text">
+				name="slug">
 			</div>
 			<hr>
 			<div class='form-group'>
@@ -141,7 +141,7 @@
 				type: Boolean,
 				default: false
 			},
-			text: {
+			slug: {
 				type: String,
 				default: ''
 			},
@@ -211,7 +211,7 @@
 					directionsUrl: this.directionsUrl,
 					typeIds: this.typeIds,
 					notes: this.notes,
-					text: this.text,
+					slug: this.slug,
 					favoriteValue: this.favoriteValue,
 					toGoValue: this.toGoValue
 				}
@@ -231,7 +231,7 @@
 					directionsUrl: this.form.directionsUrl,
 					typeIds: this.form.typeIds,
 					notes: this.form.notes,
-					text: this.form.text,
+					slug: this.form.slug,
 					favoriteValue: this.form.favoriteValue,
 					toGoValue: this.form.toGoValue
 				})

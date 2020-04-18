@@ -18,7 +18,6 @@ export default {
       updates[`favorites/${favoriteId}`] = favorite
       updates[`bars/${favorite.barId}/favorites/${favoriteId}`] = favoriteId
       updates[`bars/${favorite.barId}/contributors/${favorite.userId}`] = favorite.userId
-      // updates[`bars/${favorite.barId}/contributors/`] = favorite.userId
 
       updates[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
       updates[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
@@ -36,7 +35,7 @@ export default {
         })
     },
 
-    updateFavorite ({state, commit, rootState}, {id, barId, text, favoriteValue, toGoValue}) {
+    updateFavorite ({state, commit, rootState}, {id, barId, favoriteValue, toGoValue, barNotes}) {
       return new Promise((resolve, reject) => {
         const favorite = state.items[id]
         const edited = {
@@ -51,35 +50,39 @@ export default {
         } else {
           barUpdate[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
         }
+         // if no longer barNotes remove barNotes
+        if (barNotes === false) {
+          barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = null
+        } else {
+          barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = favorite.barId
+        }
         // if no longer togo remove barToGo
         if (toGoValue === false) {
           barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = null
         } else {
           barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
         }
-        // if favorite and goto are false
-        if (favoriteValue === false && toGoValue === false) {
+        // if favorite and goto and barNotes are false
+        if (favoriteValue === false && toGoValue === false && barNotes === false) {
           console.log('these are false')
           barUpdate[`bars/${favorite.barId}/contributors/${favorite.userId}`] = null
 
-          // firebase.database().ref(`bars/${favorite.barId}/contributors/${favorite.userId}`).remove()
           firebase.database().ref(`users/${favorite.userId}/favorites/${id}`).remove()
           firebase.database().ref(`bars/${favorite.barId}/favorites/${id}`).remove()
           firebase.database().ref(`favorites/${id}`).remove()
           .then(function () {
-            // commit('bars/appendContributorToBar', {parentId: favorite.barId, childId: favorite.userId}, {root: true})
             console.log('Remove succeeded.' + favorite.barId)
           })
         } else {
           barUpdate[`users/${favorite.userId}/favorites/${id}`] = id
 
           barUpdate[`bars/${favorite.barId}/contributors/${favorite.userId}`] = favorite.userId
-          const updates = {favoriteValue, toGoValue, text, edited}
+          const updates = {favoriteValue, toGoValue, edited, barNotes}
           firebase.database().ref('favorites').child(id).update(updates)
         }
         firebase.database().ref().update(barUpdate)
           .then(() => {
-            commit('setFavorite', {favoriteId: id, favorite: {...favorite, favoriteValue, toGoValue, text, edited}})
+            commit('setFavorite', {favoriteId: id, favorite: {...favorite, favoriteValue, toGoValue, edited}})
             commit('users/setUser', {parentId: favorite.userId, childId: favorite.barId}, {root: true})
 
             resolve(favorite)

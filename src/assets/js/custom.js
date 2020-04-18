@@ -1,2 +1,1 @@
-document.body.setAttribute('class', document.title)
-
+// document.body.setAttribute('class', document.title)

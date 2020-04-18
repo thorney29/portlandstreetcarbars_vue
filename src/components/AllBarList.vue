@@ -39,7 +39,6 @@
 		computed: {}
 	}
 </script>
-
 <style scoped>
 	ul.cards {
 	  display: flex;

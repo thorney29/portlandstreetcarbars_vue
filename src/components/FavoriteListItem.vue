@@ -10,9 +10,9 @@
               <i class="fas fa-star"></i> 
           </div><br>
          <div class="favorite-content">
-          <div v-if="this.favorite.text">
+          <div v-if="this.favorite.barNotes">
             <p class='notes-title'>My Notes:</p> 
-            <p class="notes">{{favorite.text}}</p>       
+            <p class="notes">{{this.favorite.barNotes}}</p>       
           </div> 
           <div v-else><em>Click the note icon below to add a notes about this bar.</em></div>
         </div>
@@ -77,8 +77,6 @@
     font-family: 'Over the Rainbow', cursive;
     font-size: 24px;
     font-family: 'Bungee Inline', cursive;
-    /*font-family: 'Zeyada', cursive;*/
-    /*font-family: 'Over the Rainbow', cursive;*/
     font-family: 'Gochi Hand', cursive;
     padding: 10px;
   }
@@ -96,12 +94,7 @@
       -webkit-transition: color .2s ease-out;
       transition: color .2s ease-out;
   }
-  /*.favorite__heart.is-disabled:hover {
-       cursor: default;
-   }
-   .favorite__star.is-disabled:hover {
-       cursor: default;
-   }*/
+
   .favorite__checkbox {
      opacity: 0;
       height: 20px;

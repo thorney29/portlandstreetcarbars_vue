@@ -47,7 +47,6 @@
 				<p style="text-align: center" class="barAddress">{{bar.address}}</p>
 				<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
 
-				
 				<div v-if="!user" class="text-center">
 					<em><router-link :to="{name: 'PageLogin', query: {redirectTo: $route.path}}"> Login </router-link>&nbsp;or&nbsp;
 					<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save a favorite and add notes.</em>
@@ -121,8 +120,7 @@
 				notes: this.bar ? this.bar.notes : '',
 				favoriteValue: this.favorite ? this.favorite.favoriteValue : '',
 				toGoValue: this.favorite ? this.favorite.toGoValue : '',
-				text: this.bar ? this.bar.text : ''
-				// permissions: this.user ? this.user.permissions : ''
+				slug: this.bar ? this.bar.slug : ''
 			}
 		},
 		mixins: [asyncDataStatus],
@@ -158,61 +156,11 @@
 			favorites () {
 				const favoriteIds = Object.values(this.bar.favorites)
 				const userFavoriteIds = Object.values(this.user.favorites)
-				// console.log(favoriteIds)
-				// console.log(userFavoriteIds)
 				const favorites = Object.values(this.$store.state.favorites.items)
 				.filter(favorite => favoriteIds.includes(favorite['.key']))
 				.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-				// console.log(favorites)
 				return favorites
 			},
-			// favorites () {
-			// 	const favoriteIds = Object.values(this.bar.favorites)
-			// 	const userFavoriteIds = undefined
-			// 	if (this.user.favorites) {
-			// 		const userFavoriteIds = Object.values(this.user.favorites)
-			// 		// console.log(favoriteIds)
-			// 		// console.log(userFavoriteIds)
-			// 		const favorites = Object.values(this.$store.state.favorites.items)
-			// 		.filter(favorite => favoriteIds.includes(favorite['.key']))
-			// 		.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-			// 		// console.log(favorites)
-			// 		return favorites
-			// 	}
-			// 	return userFavoriteIds
-			// },
-
-			// Check to see if this
-			// isFavorite () {
-			// 	const favoriteIds = Object.values(this.bar.favorites)
-			// 	// const userFavoriteIds = null
-			// 	if (this.user.favorites === 'undefined' || this.user.favorites === undefined || this.user.favorites === null) {
-			// 		this.user.favorites = null
-			// 	} else {
-			// 		const userFavoriteIds = Object.values(this.user.favorites)
-			// 		// console.log('favoriteIds')
-			// 		// console.log(favoriteIds)
-			// 		// console.log('userFavoriteIds')
-			// 		// console.log(userFavoriteIds)
-			// 		// const isFavorite = Object.values(this.$store.state.favorites.items)
-			// 		const isFavorite = Object.values(this.favorites)
-			// 		.filter(favorite => favoriteIds.includes(favorite['.key']))
-			// 		.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-			// 		// console.log('isFavorite')
-			// 		// console.log(isFavorite)
-			// 		// console.log(typeof isFavorite)
-			// 		for (var key in isFavorite) {
-			// 			var value = isFavorite[key]
-			// 		}
-			// 		// console.log('value')
-			// 		// console.log(value)
-			// 		if (value === undefined) {
-			// 			return false
-			// 		} else {
-			// 			return true
-			// 		}
-			// 	}
-			// }
 			isFavorite () {
 				const favoriteIds = Object.values(this.bar.favorites)
 				if (this.user.favorites === 'undefined' || this.user.favorites === undefined || this.user.favorites === null) {
@@ -220,23 +168,12 @@
 				} else {
 					if (this.user.favorites) {
 						const userFavoriteIds = Object.values(this.user.favorites)
-
-						// console.log('favoriteIds')
-						// console.log(favoriteIds)
-						// console.log('userFavoriteIds')
-						// console.log(userFavoriteIds)
-						// const isFavorite = Object.values(this.$store.state.favorites.items)
 						const isFavorite = Object.values(this.favorites)
 						.filter(favorite => favoriteIds.includes(favorite['.key']))
 						.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-						// console.log('isFavorite')
-						// console.log(isFavorite)
-						// console.log(typeof isFavorite)
 						for (var key in isFavorite) {
 							var value = isFavorite[key]
 						}
-						// console.log('value')
-						// console.log(value)
 						if (value === undefined) {
 							return false
 						} else {

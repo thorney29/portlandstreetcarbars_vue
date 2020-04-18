@@ -185,26 +185,24 @@
 
 		created () {
 			// fetch bar
-			if (this.user.favorites) {
-				this.fetchBar({id: this.id})
-				.then(bar => {
-					// fetch user
-					// this.fetchFavorite({id: this.id})
-					this.fetchUser({id: bar.userId})
-					return this.fetchFavorites({ids: Object.keys(bar.favorites)})
-				})
-				.then(favorites => {
-					return Promise.all(favorites.map(favorite => {
-						// this.fetchUser({id: favorite.userId})
-						console.log('favorites fetched success')
-					}))
-				})
-				.then(() => {
-						this.asyncDataStatus_fetched()
-				})
-			} else {
-				this.asyncDataStatus_fetched()
-			}
+			// if (this.user.favorites) {
+			// 	this.fetchBar({id: this.id})
+			// 	.then(bar => {
+			// 		// fetch user
+			// 		this.fetchUser({id: bar.userId})
+			// 		return this.fetchFavorites({ids: Object.keys(bar.favorites)})
+			// 	})
+			// 	.then(favorites => {
+			// 		return Promise.all(favorites.map(favorite => {
+			// 			console.log('favorites fetched success')
+			// 		}))
+			// 	})
+			// 	.then(() => {
+			// 			this.asyncDataStatus_fetched()
+			// 	})
+			// } else {
+			// 	this.asyncDataStatus_fetched()
+			// }
 		}
 	}
 </script>

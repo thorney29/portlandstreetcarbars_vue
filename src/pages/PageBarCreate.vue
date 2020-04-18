@@ -39,7 +39,7 @@
 				return this.$store.state.types.items[this.typeId]
 			},
 			hasUnsavedChanges () {
-				return (this.$refs.editor.form.title || this.$refs.editor.form.image || this.$refs.editor.form.address || this.$refs.editor.form.directionsUrl || this.$refs.editor.form.notes || this.$refs.editor.form.typeIds || this.$refs.editor.form.text) && !this.saved
+				return (this.$refs.editor.form.title || this.$refs.editor.form.image || this.$refs.editor.form.address || this.$refs.editor.form.directionsUrl || this.$refs.editor.form.notes || this.$refs.editor.form.typeIds || this.$refs.editor.form.slug) && !this.saved
 			}
 		},
 
@@ -47,7 +47,7 @@
 			...mapActions('bars', ['createBar']),
 			...mapActions('types', ['fetchType']),
 
-			save ({typeId, title, image, address, directionsUrl, typeIds, notes, text, toGoValue, favoriteValue}) {
+			save ({typeId, title, image, address, directionsUrl, typeIds, notes, slug, toGoValue, favoriteValue}) {
 				this.createBar({
 					typeId: this.type['.key'],
 					title,
@@ -56,7 +56,7 @@
 					typeIds,
 					address,
 					directionsUrl,
-					text,
+					slug,
 					toGoValue,
 					favoriteValue
 				}).then(bar => {

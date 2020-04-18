@@ -29,8 +29,8 @@
        		</div>
 				
    			<div v-if="seeSearch">
-			 	<p><input type="text" v-model="search" value="Rum Club" placeholder="Search by name.."/></p>
-       		 	<p><label style="padding-top:8px;"><em>Bar name: {{search}}</em></label></p>
+			 	<p><input type="text" v-model="searchKeyword" placeholder="Search by name..."/></p>
+			    <p><label style="padding-top:8px;"><em>Bar name: {{searchKeyword}}</em></label></p>
    			</div>
 			<ul class="filterArea flex-grid types"  v-if="seeFilter">
 				<li @mouseover="upHere = true" @mouseleave="upHere = false" 
@@ -65,7 +65,7 @@
 						</div>
 					<div id="staticSearch" v-show="isShowing" @click="showSearch ^= true"><i class="fas fa-search"></i>
 					</div>
-					<input id="showSearchInput" v-show="showSearch" type="text" v-model="search" placeholder="Search bars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'enter your text'"/>
+					<input id="showSearchInput" v-show="showSearch" type="text" v-model="searchKeyword" placeholder="Search bars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'enter your text'"/>
 				</div>
 			</div>
 		<div class="all-bars-directions">
@@ -81,6 +81,7 @@
 	import {mapActions, mapGetters} from 'vuex'
 	import AllBarList from '@/components/AllBarList'
 	import asyncDataStatus from '@/mixins/asyncDataStatus'
+	import _ from 'lodash'
 	export default {
 		components: {
 			AllBarList
@@ -91,12 +92,15 @@
 			return {
 				selectedTypes: [],
 				bars: this.bars ? this.bars : [],
-				search: '',
+				searchKeyword: '',
 				seeSearch: false,
 				seeFilter: false,
 				upHere: false,
 				isShowing: false,
-				showSearch: false
+				showSearch: false,
+				// new
+				onOff: true,
+				search: ''
 			}
 		},
 		mixins: [asyncDataStatus],
@@ -112,24 +116,32 @@
 			}),
 			// This is for search by name
 			filteredList () {
+				let results = []
+				// let barsArray = []
 				let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
+
 				if (this.selectedTypes.length === 0) {
 					// define the bars
 					// review a list of bars and return a specific list of bars that includes the string of letters in the search based on bar titles
 					// transform the text to lowercase
-					return bars.filter(bar => {
-					return bar.title.toLowerCase().includes(this.search.toLowerCase())
+					// return this.bars.filter(bar => bar.title.toLowerCase().includes(this.searchKeyword))
+					Object.values(bars).forEach(bar => {
+						if (bar['title'].toLowerCase().startsWith(this.searchKeyword)) {
+							results.push(bar)
+						}
 					})
+					console.log(results)
+					bars = results
 				} else if (this.selectedTypes.length > 0) {
 					let checkedFilters = this.selectedTypes.map(v => v.toLowerCase().replace(/\s+/g, '-'))
 					// create array to store bars that meet conditions (checked filters are not null in the typeIds)
 					let barArray = []
-					bars.forEach(function (bar) {
+					Object.values(bars).forEach(bar => {
 						let typeIds = Object.values(bar.typeIds)
+						var array = []
 						for (let i = 0; i < typeIds.length; i++) {
-							var array = []
 							typeIds.map(function (val) {
-							return array.push(val)
+								return array.push(val)
 							})
 						}
 						let ifTrue = array.some((val) => checkedFilters.indexOf(val) !== -1)
@@ -138,15 +150,47 @@
 						}
 						bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
 					})
+				// 	bars.forEach(function (bar) {
+				// 		let typeIds = Object.values(bar.typeIds)
+				// 		for (let i = 0; i < typeIds.length; i++) {
+				// 			var array = []
+				// 			typeIds.map(function (val) {
+				// 			return array.push(val)
+				// 			})
+				// 		}
+				// 		let ifTrue = array.some((val) => checkedFilters.indexOf(val) !== -1)
+				// 		if (ifTrue === true) {
+				// 			barArray.push(bar)
+				// 		}
+				// 		bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
+				// 	})
 				} else {
 					return bars
-					// if there is more than one filter selected find all of the bars that have
 				}
 				return bars
 			}
 		},
-
+		watch: {
+			searchKeyword: _.debounce(function () {
+			return this.searchKeyword
+			}, 300)
+		},
 		methods: {
+			toggleOnOff () {
+				this.onOff = !this.onOff
+			},
+			// searchBars: function (searchQuery) {
+			// 	this.isLoading = true
+			// 	let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
+			// 	if (searchQuery) {
+			// 		this.bars = bars.filter((i) => i.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+			// 		this.isLoading = false
+			// 	} else {
+			// 		this.bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
+			// 		this.isLoading = false
+			// 	}
+			// 	console.log(this.searchResult)
+			// },
 			...mapActions('types', ['fetchAllTypes']),
 			...mapActions('bars', ['fetchBar', 'fetchBars', 'fetchAllBars', 'createBar']),
 			...mapActions('favorites', ['fetchFavorite', 'fetchFavorites', 'fetchAllFavorites']),
@@ -154,11 +198,11 @@
 			isChecked (value) {
 				return this.selectedTypes.includes(value)
 			},
-			// mouseover: function () {
-			// 	alert('hi')
-			// 	this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
-			// 	document.getElementsByClassName('li.type-label').style.background = this.mycolor
-			// },
+			mouseover: function () {
+				alert('hi')
+				this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
+				document.getElementsByClassName('li.type-label').style.background = this.mycolor
+			},
 			scrollTop () {
 				window.scrollTo(0, 0)
 			}
