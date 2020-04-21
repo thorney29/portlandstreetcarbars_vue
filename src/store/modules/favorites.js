@@ -19,8 +19,8 @@ export default {
       updates[`bars/${favorite.barId}/favorites/${favoriteId}`] = favoriteId
       updates[`bars/${favorite.barId}/contributors/${favorite.userId}`] = favorite.userId
 
-      updates[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
-      updates[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
+      // updates[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
+      // updates[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
 
       updates[`users/${favorite.userId}/favorites/${favoriteId}`] = favoriteId
       firebase.database().ref().update(updates)
@@ -45,28 +45,44 @@ export default {
         favorite.userId = rootState.auth.authId
         const barUpdate = {}
         // if unfavorited remove barFavorite
-        if (favoriteValue === false) {
-          barUpdate[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = null
-        } else {
-          barUpdate[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
-        }
-         // if no longer barNotes remove barNotes
-        if (barNotes === false) {
-          barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = null
-        } else {
-          barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = favorite.barId
-        }
-        // if no longer togo remove barToGo
-        if (toGoValue === false) {
-          barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = null
-        } else {
-          barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
-        }
+        // if (favoriteValue === false) {
+        //   barUpdate[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = null
+        // } else {
+        //   barUpdate[`users/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
+        // }
+        //  // if no longer barNotes remove barNotes
+        // if (barNotes === false) {
+        //   barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = null
+        // } else {
+        //   barUpdate[`users/${favorite.userId}/barNotes/${favorite.barId}`] = favorite.barId
+        // }
+        // // if no longer togo remove barToGo
+        // if (toGoValue === false) {
+        //   barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = null
+        // } else {
+        //   barUpdate[`users/${favorite.userId}/barToGo/${favorite.barId}`] = favorite.barId
+        // }
+        // if (favoriteValue === false) {
+        //   barUpdate[`favorites/${favorite.userId}/barFavorites/${favorite.barId}`] = false
+        // } else {
+        //   barUpdate[`favorites/${favorite.userId}/barFavorites/${favorite.barId}`] = favorite.barId
+        // }
+        //  // if no longer barNotes remove barNotes
+        // if (barNotes === false) {
+        //   barUpdate[`favorites/${id}/barNotes`] = ''
+        // } else {
+        //   barUpdate[`favorites/${id}/barNotes`] = barNotes
+        // }
+        // // if no longer togo remove barToGo
+        // if (toGoValue === false) {
+        //   barUpdate[`favorites/${id}/barToGo`] = null
+        // } else {
+        //   barUpdate[`favorites/${id}/barToGo`] = toGoValue
+        // }
         // if favorite and goto and barNotes are false
-        if (favoriteValue === false && toGoValue === false && barNotes === false) {
+        if (favoriteValue === false && toGoValue === false && barNotes === '') {
           console.log('these are false')
           barUpdate[`bars/${favorite.barId}/contributors/${favorite.userId}`] = null
-
           firebase.database().ref(`users/${favorite.userId}/favorites/${id}`).remove()
           firebase.database().ref(`bars/${favorite.barId}/favorites/${id}`).remove()
           firebase.database().ref(`favorites/${id}`).remove()
@@ -75,14 +91,13 @@ export default {
           })
         } else {
           barUpdate[`users/${favorite.userId}/favorites/${id}`] = id
-
           barUpdate[`bars/${favorite.barId}/contributors/${favorite.userId}`] = favorite.userId
           const updates = {favoriteValue, toGoValue, edited, barNotes}
           firebase.database().ref('favorites').child(id).update(updates)
         }
         firebase.database().ref().update(barUpdate)
           .then(() => {
-            commit('setFavorite', {favoriteId: id, favorite: {...favorite, favoriteValue, toGoValue, edited}})
+            commit('setFavorite', {favoriteId: id, favorite: {...favorite, favoriteValue, toGoValue, barNotes, edited}})
             commit('users/setUser', {parentId: favorite.userId, childId: favorite.barId}, {root: true})
 
             resolve(favorite)

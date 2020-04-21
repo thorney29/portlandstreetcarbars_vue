@@ -2,9 +2,12 @@
 	<div class="flex-grid justify-center">
 		<div class="col-2 card card-form">
 			<h1 class="text-center">Login</h1>
-			<div class="push-top text-center">
-				<button @click="signInWithGoogle" class="btn-red btn-xsmall">
-				<i class="fab fa-google"></i> Log in with Google</button>
+			<div class="push-top text-center" >
+				<button class="googleSignIn" @click="signInWithGoogle">
+				<span style="border-radius: 2px;margin: 3px;width: 20%;background: white;">
+				<img style="width: 70%;margin: 10% 0 0 0;" src="/static/assets/img/google-icon.png"></span>
+				<h3 style="margin: auto 2%;color: white;">Sign in with Google</h3> 
+				</button>
 			</div>
 			<br>
 			<hr>
@@ -105,5 +108,17 @@
 </script>
 
 <style scoped>
+	.flex-grid {background:transparent;}
 	.card {height: auto;margin-bottom: 4%}
+	.googleSignIn {
+		display:flex;
+		background:#4285F4;
+		border-radius: 2px;
+		width: 300px;
+		margin: auto;
+
+	}
+	.googleSignIn:hover {
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	}
 </style>

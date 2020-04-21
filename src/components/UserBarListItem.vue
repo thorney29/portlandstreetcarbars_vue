@@ -44,7 +44,7 @@
 
 <script>
 	// added this now
-	import {mapActions, mapGetters} from 'vuex'
+	import {mapGetters} from 'vuex'
 	import FavoriteList from '@/components/FavoriteList'
 	import FavoriteEditor from '@/components/FavoriteEditor'
 	import {countObjectProperties} from '@/utils'
@@ -74,7 +74,7 @@
 				notes: this.bar ? this.bar.notes : '',
 				favoriteValue: this.bar ? this.bar.favoriteValue : '',
 				toGoValue: this.bar ? this.bar.toGoValue : '',
-				text: this.bar ? this.bar.text : '',
+				barNotes: this.bar ? this.bar.barNotes : '',
 				icons: this.bar ? this.bar.icons : '',
 				isShowing: false
 			}
@@ -106,10 +106,11 @@
 					// window.open("http://maps.google.com/?q="+addressLongLat, '_system')
 					window.open('https://www.google.com/maps/place/?key=AIzaSyCXOqIYw5VQH9kCQwj3buLfVV3vHvKfxsM&q=' + title)
 				}
-			},
-			...mapActions('bars', ['fetchBar']),
-			...mapActions('users', ['fetchUser']),
-			...mapActions('favorites', ['fetchFavorites'])
+			}
+			// ,
+			// ...mapActions('bars', ['fetchBar']),
+			// ...mapActions('users', ['fetchUser']),
+			// ...mapActions('favorites', ['fetchFavorites'])
 		},
 		computed: {
 			// Get user object
@@ -127,16 +128,16 @@
 			contributorsCount () {
 				return countObjectProperties(this.bar.contributors)
 			},
+			// userFavoritedBars () {
+			// 	return this.$store.getters['users/userFavoritedBars']
+			// },
 			// Get this User's Bar Favorites
 			favorites () {
 				const favoriteIds = Object.values(this.bar.favorites)
 				const userFavoriteIds = Object.values(this.user.favorites)
-				// console.log(favoriteIds)
-				// console.log(userFavoriteIds)
 				const favorites = Object.values(this.$store.state.favorites.items)
 				.filter(favorite => favoriteIds.includes(favorite['.key']))
 				.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-				// console.log(favorites)
 				return favorites
 			},
 			userIsContributor () {
@@ -144,20 +145,13 @@
 			},
 			favoriteUser () {
 				const favoriteObjects = Object.values(this.favorites)
-				// console.log('contributorIds')
-				// console.log(contributorIds)
 				const user = this.user['.key']
-				// console.log(user)
 				const userIsInFavorite = favoriteObjects.filter(function (favorite) {
 					return favorite.userId === user
 				})
 				for (var key in userIsInFavorite) {
 					var value = userIsInFavorite[key]
 				}
-				// // console.log(value)
-				// console.log(value)
-				// console.log('userIsInFavorite')
-				// console.log(userIsInFavorite)
 				const favoriteUser = value
 				return favoriteUser
 			},
@@ -169,40 +163,17 @@
 					const userFavoriteIds = Object.values(this.user.favorites)
 					return userFavoriteIds
 				}
-				// console.log(favoriteIds)
-				// console.log(userFavoriteIds)
 				const isFavorite = Object.values(this.$store.state.favorites.items)
 				.filter(favorite => favoriteIds.includes(favorite['.key']))
 				.filter(favorite => userFavoriteIds.includes(favorite['.key']))
-				// console.log(typeof isFavorite)
 				for (var key in isFavorite) {
 					var value = isFavorite[key]
 				}
-				// console.log(value)
 				return value
 			}
 		},
 
 		created () {
-			// fetch bar
-			// if (this.user.favorites) {
-			// 	this.fetchBar({id: this.id})
-			// 	.then(bar => {
-			// 		// fetch user
-			// 		this.fetchUser({id: bar.userId})
-			// 		return this.fetchFavorites({ids: Object.keys(bar.favorites)})
-			// 	})
-			// 	.then(favorites => {
-			// 		return Promise.all(favorites.map(favorite => {
-			// 			console.log('favorites fetched success')
-			// 		}))
-			// 	})
-			// 	.then(() => {
-			// 			this.asyncDataStatus_fetched()
-			// 	})
-			// } else {
-			// 	this.asyncDataStatus_fetched()
-			// }
 		}
 	}
 </script>
@@ -215,7 +186,7 @@
 		height: 100%;
 		background: white;
 	}
-	-webkit-flex: 1;
+	
 	.active {color:red;}
 	.showMoreDetails {
 		border: #54b09b 10px dotted;

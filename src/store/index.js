@@ -10,6 +10,7 @@ import bars from './modules/bars'
 import favorites from './modules/favorites'
 import users from './modules/users'
 import auth from './modules/auth'
+import markers from './modules/markers'
 
 Vue.use(Vuex)
 Vue.use(VueMoment)
@@ -25,6 +26,7 @@ export default new Vuex.Store({
 		auth,
 		types,
 		bars,
-		favorites
+		favorites,
+		markers
 	}
 })

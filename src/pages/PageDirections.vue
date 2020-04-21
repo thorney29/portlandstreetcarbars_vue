@@ -29,11 +29,12 @@
        		</div>
 				
    			<div v-if="seeSearch">
-			 	<p><input type="text" v-model="searchKeyword" placeholder="Search by name..."/></p>
-			    <p><label style="padding-top:8px;"><em>Bar name: {{searchKeyword}}</em></label></p>
+			 	<p><input v-focus type="text" v-model="searchKeyword" v-on:input="isTyping" placeholder="Search by name..."/><button @click="resetSearchWord" id="reset">Reset Search</button></p>
+			 	<p v-show="typing">Searching...</p>
+			    <p id="barNameResults" v-show="!typing" style="padding-top:8px;"><em>Bar name: {{searchKeyword}}</em></p>
    			</div>
 			<ul class="filterArea flex-grid types"  v-if="seeFilter">
-				<li @mouseover="upHere = true" @mouseleave="upHere = false" 
+				<li @click="mouseover" 
 			    class="type-label" v-for="(type, index) in types"  :key="index"  :class="{ 'checkedtype': isChecked(type.name)}">
 				    <label for="tag-type"> 
 				   	<input class="searchArea" type="checkbox" :value="type.name" id="tag-type" v-model="selectedTypes"><i class="fa fa-type-icon">{{type.icon}}</i><span>{{type.name}}</span></label>
@@ -43,31 +44,31 @@
 			<!-- </div> -->
 		  	<p class="filters" v-show="selectedTypes.length !== 0">
 		    	{{selectedTypes.length > 1 ? 'Filters: ': 'Filter: '}}
-	    		<ul style="display: flex;justify-content: flex-start;">
-	    			<li style="display: flex;flex-flow: row nowrap;justify-content: flex-start;white-space: nowrap;" v-for="type in selectedTypes" >
-			    		<span class="filter-label">{{type}} ({{filteredList.length}})</span>
-			  			<span class="addAnother" style="margin:auto;padding: 2px 4px 0;font-size: 12px;" v-if="selectedTypes.length > 1">
-			  			<i class="fas fa-plus-circle"></i></span>
+	    		<ul>
+	    			<li v-for="type in selectedTypes" >
+			  			<span class="addAnother" style="margin:auto;padding: 2px 4px 0;font-size: 12px;">
+			  			<i class="fas fa-filter"></i></span>
+			  			<span class="filter-label">{{type}} ({{filteredList.length}})</span>
 		  			</li>
 	  			</ul>
 		  	</p>
 		</div>
 		<!-- This is for the return to top and search bar -->
-			<div id="staticReturnTop">
-				<div id="more" @click="isShowing ^= true" v-show="!isShowing">
-					<i class="fas fa-ellipsis-h"></i>
-				</div>
-				<div id="fixedIcons" v-show="isShowing">
-					<div id="close" @click="isShowing ^= true">
-						<i class="far fa-times-circle"></i></div>
-					<div id="returnTop" v-show="isShowing" view-scroll-to="el:'#MainContainerFluid'" @click="scrollTop">
-						<i class="fas fa-arrow-up"></i>
-						</div>
-					<div id="staticSearch" v-show="isShowing" @click="showSearch ^= true"><i class="fas fa-search"></i>
-					</div>
-					<input id="showSearchInput" v-show="showSearch" type="text" v-model="searchKeyword" placeholder="Search bars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'enter your text'"/>
-				</div>
+		<div id="staticReturnTop">
+			<div id="more" @click="isShowing ^= true" v-show="!isShowing">
+				<i class="fas fa-ellipsis-h"></i>
 			</div>
+			<div id="fixedIcons" v-show="isShowing">
+				<div id="close" @click="isShowing ^= true">
+					<i class="fas fa-times"></i></div>
+				<div id="returnTop" v-show="isShowing" view-scroll-to="el:'#MainContainerFluid'" @click="scrollTop">
+					<i class="fas fa-arrow-up"></i>
+					</div>
+				<div id="staticSearch" v-show="isShowing" @click="showSearch ^= true"><i class="fas fa-search"></i>
+				</div>
+				<input id="showSearchInput" v-show="showSearch" type="text" v-model="searchKeyword" placeholder="Search bars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'enter your text'"/>
+			</div>
+		</div>
 		<div class="all-bars-directions">
 			<!-- get the results of the search
 			* default is empty string. all bars shown -->
@@ -99,8 +100,18 @@
 				isShowing: false,
 				showSearch: false,
 				// new
+				type: '',
+				typing: false,
 				onOff: true,
 				search: ''
+			}
+		},
+		directives: {
+			focus: {
+				// directive definition
+				inserted: function (el) {
+				el.focus()
+				}
 			}
 		},
 		mixins: [asyncDataStatus],
@@ -120,36 +131,63 @@
 				// let barsArray = []
 				let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
 
-				if (this.selectedTypes.length === 0) {
+				let searchKeywordLength = this.searchKeyword.length
+				if (this.selectedTypes.length >= 0 && searchKeywordLength > 2) {
 					// define the bars
 					// review a list of bars and return a specific list of bars that includes the string of letters in the search based on bar titles
 					// transform the text to lowercase
 					// return this.bars.filter(bar => bar.title.toLowerCase().includes(this.searchKeyword))
 					Object.values(bars).forEach(bar => {
-						if (bar['title'].toLowerCase().startsWith(this.searchKeyword)) {
+						if (bar['title'].toLowerCase().includes(this.searchKeyword)) {
 							results.push(bar)
 						}
 					})
-					console.log(results)
-					bars = results
+					if (results.length <= 0) {
+						let barResult = document.querySelector('#barNameResults')
+						barResult.innerHTML = "Sorry, we couldn't find an exact match. Please try another search."
+						console.log(barResult)
+					}
+
+					this.typing = false
+					return results
 				} else if (this.selectedTypes.length > 0) {
 					let checkedFilters = this.selectedTypes.map(v => v.toLowerCase().replace(/\s+/g, '-'))
 					// create array to store bars that meet conditions (checked filters are not null in the typeIds)
-					let barArray = []
-					Object.values(bars).forEach(bar => {
-						let typeIds = Object.values(bar.typeIds)
-						var array = []
-						for (let i = 0; i < typeIds.length; i++) {
-							typeIds.map(function (val) {
-								return array.push(val)
-							})
-						}
-						let ifTrue = array.some((val) => checkedFilters.indexOf(val) !== -1)
-						if (ifTrue === true) {
-							barArray.push(bar)
-						}
-						bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
-					})
+					let types = Object.values(this.$store.state.types.items)
+					let whatsthis = {}
+					for (var i = 0; i < checkedFilters.length; i++) {
+						Object.values(types).forEach(type => {
+							if (type['.key'].toLowerCase().includes(checkedFilters[i])) {
+								whatsthis = (Object.values(type.bars))
+							}
+						})
+					}
+					let arrayofbarresultskeys = []
+					for (var j = 0; j < whatsthis.length; j++) {
+						Object.values(bars).filter(bar => {
+							if (bar['.key'].includes(whatsthis[j])) {
+								arrayofbarresultskeys.push(bar)
+							}
+						})
+					}
+					bars = arrayofbarresultskeys
+					return bars
+	// ____________________________________
+					// let barArray = []
+					// Object.values(bars).filter(bar => {
+					// 	let typeIds = Object.values(bar.typeIds)
+					// 	var array = []
+					// 	for (let i = 0; i < typeIds.length; i++) {
+					// 		typeIds.map(function (val) {
+					// 			return array.push(val)
+					// 		})
+					// 	}
+					// 	let ifTrue = array.some((val) => checkedFilters.indexOf(val) !== -1)
+					// 	if (ifTrue === true) {
+					// 		barArray.push(bar)
+					// 	}
+					// 	bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
+					// })
 				// 	bars.forEach(function (bar) {
 				// 		let typeIds = Object.values(bar.typeIds)
 				// 		for (let i = 0; i < typeIds.length; i++) {
@@ -165,9 +203,11 @@
 				// 		bars = barArray.sort((a, b) => (a.title > b.title) ? 1 : -1)
 				// 	})
 				} else {
+					this.typing = false
 					return bars
 				}
-				return bars
+				// this.typing = false
+				// return bars
 			}
 		},
 		watch: {
@@ -179,18 +219,9 @@
 			toggleOnOff () {
 				this.onOff = !this.onOff
 			},
-			// searchBars: function (searchQuery) {
-			// 	this.isLoading = true
-			// 	let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
-			// 	if (searchQuery) {
-			// 		this.bars = bars.filter((i) => i.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-			// 		this.isLoading = false
-			// 	} else {
-			// 		this.bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
-			// 		this.isLoading = false
-			// 	}
-			// 	console.log(this.searchResult)
-			// },
+			isTyping () {
+				this.typing = true
+			},
 			...mapActions('types', ['fetchAllTypes']),
 			...mapActions('bars', ['fetchBar', 'fetchBars', 'fetchAllBars', 'createBar']),
 			...mapActions('favorites', ['fetchFavorite', 'fetchFavorites', 'fetchAllFavorites']),
@@ -199,12 +230,15 @@
 				return this.selectedTypes.includes(value)
 			},
 			mouseover: function () {
-				alert('hi')
-				this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
-				document.getElementsByClassName('li.type-label').style.background = this.mycolor
+				// this.mycolor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
+				// document.getElementsByClassName('li.type-label').style.background = this.mycolor
 			},
 			scrollTop () {
+				this.isShowing = false
 				window.scrollTo(0, 0)
+			},
+			resetSearchWord () {
+				this.searchKeyword = ''
 			}
 		},
 
@@ -222,6 +256,9 @@
 </script>
 
 <style scoped>
+	.flex.grid {
+		width: 90%;
+	}
 	.flex-grid.types {
 		background: transparent;
 	}
@@ -235,9 +272,20 @@
 	.filterArea {width: 90%}
 	p input{
 		border: 1px solid #ccc;
-	    width: 100%;
+	    width: 80%;
 	    text-align: center;
 	    padding: .625em;
+	}
+	#reset {
+		
+	    height: 45px;
+	    color: black;
+	    padding: 0 .825rem;
+	    border: 2px solid #5A183F;
+	}
+	#reset:hover {
+		background: #5A183F;
+		color:white;
 	}
 	.type-label {
 		background: transparent; 
@@ -251,31 +299,42 @@
 		padding: .825em;
 		cursor: pointer;
 	}
+	
 	h3.type-label,
 	p.type-label  {
 		max-width: 100%;
 		width: 100%;
 	}
-
+	h3 {
+		text-align: center;
+    font-size: 16px;
+    padding: 1em 1.825em;
+	}
 	li.type-label  {
 		flex: 1;
 		cursor: pointer;
 		border: 5px solid transparent;
 		display: flex;
 		margin: auto 1px;
+		height: 80px;
 	}
 	li.type-label.checkedtype{
 		border: 5px #BCDE1E solid;
 	    cursor: pointer;
 	    margin: auto 1px;
+	    /*transform: scale(1.2);*/
+		/*height: 80px;*/
+		background: white;
+		z-index: 999;
 	}
-	li.type-label:hover{
+	li.type-label:active{
      background-color: #B2D414;
+     border: 5px #BCDE1E solid;
      -webkit-animation: random 5s;
-     animation: random 5s infinite;
+     animation: random 3s infinite;
 	}
-
-	@keyframes  random {
+	li.type-label:hover{ border: 5px solid #666;}
+	@keyframes random {
 	    15% { background-color: #A8CA0A; } 
 	    30% { background-color: #9EC000; } 
 	    45% { background-color: #94B600; } 
@@ -305,7 +364,19 @@
 	.type-label svg.svg-inline--fa{ margin: auto !important;}
 
 	.filters {
+		text-align: left;
 		margin: 2.6% auto;
+	}
+	.filters ul  {
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+	}
+	.filters li {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-start;
+		white-space: nowrap;
 	}
 	.filter-label {
 		padding: .625em;
@@ -329,11 +400,11 @@
 	        border: 5px transparent double;
 	        cursor: pointer;
 	        margin: 0;
-	        height: 90%;
+	        /*height: 90%;*/
 	    }
 	   
 	     li.type-label span {
-	        font-size: 1.8vw;
+	        font-size: 1vw;
 	     }
 	 }
      @media screen and (max-width: 1024px) {
@@ -352,6 +423,25 @@
 		.type-label {
 		    padding: 8px;
 		}
+		svg.svg-inline--fa.fa-biking.fa-w-20,
+		svg.svg-inline--fa.fa-beer.fa-w-14,
+		svg.svg-inline--fa.fa-cocktail.fa-w-18,
+		svg.svg-inline--fa.fa-coffee.fa-w-20,
+		svg.svg-inline--fa.fa-glass-cheers.fa-w-20,
+		svg.svg-inline--fa.fa-utensils.fa-w-13,
+		svg.svg-inline--fa.fa-dice.fa-w-20,
+		svg.svg-inline--fa.fa-music.fa-w-16,
+		svg.svg-inline--fa.fa-umbrella-beach.fa-w-20,
+		svg.svg-inline--fa.fa-football-ball.fa-w-16,
+		svg.svg-inline--fa.fa-wine-glass-alt.fa-w-9 {
+			font-size: 2rem !important;
+		}
+		svg.svg-inline--fa.fa-wine-glass-alt.fa-w-9 {
+			font-size: 2.8rem !important;
+		}
+	}
+	.displayNone {
+		display:none;
 	}
 	#staticReturnTop {
 		display:flex;
@@ -386,7 +476,7 @@
 	}
 	#close {
 		order: 3;
-		background: black;
+		background: red;
 		width:48px;
 		height: 45px;
 		text-align: center;
@@ -406,6 +496,14 @@
 		order: 2;
 		margin: 0 4px;
 	}
+	svg.svg-inline--fa.fa-search.fa-w-16 {
+	    width: .9em;
+	}
+	svg.svg-inline--fa.fa-times.fa-w-11,
+	svg.svg-inline--fa.fa-arrow-up.fa-w-14,
+	.svg-inline--fa.fa-w-16 {
+		padding-bottom: 2px;
+	}
 	#staticSearch {
 		background: orange;
 		color:white;
@@ -419,13 +517,12 @@
 	#showSearchInput {
 		position: fixed;
 	    background: #5A183F;
+	    background:white;
+	    border: 2px solid orange;
 	    padding: 20px;
 	    bottom: 80px;
-	    max-width: 100%;
-	    width: 100%;
+	    width: 60%;
 	    margin: 0;
-	    right: 0;
-	    left: 0;
-	    color:white;
+	    right: 45px;
 	}
 </style>

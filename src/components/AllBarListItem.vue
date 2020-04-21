@@ -1,7 +1,7 @@
  <template>
 	<li v-if="bar" class="flex-item card" v-bind:class = "{ 'yellow-border': barFavoritesCount >= 10 }">
   		<div class="card-details">
-  			<div class="card-header">
+  			<div class="card-header"  :class="{ 'addFlex100Class' : isShowing == false}">
 	      		<!-- <router-link :to="{name: 'PageBarShow', params: {id: bar['.key']}}"> -->
 	      		<router-link :to="{name: 'PageBarShow', 
 	      		params: {id: bar['.key'], slug: bar.slug}
@@ -10,6 +10,7 @@
 		      		<!-- Heading -->
 					<div class="wrapper">       
 						<h2 class="sparkle u-hover--sparkle">{{bar.title}}</h2>
+						<h5 style="color:#211E1E">{{bar.title}}</h5>
 					</div>
 				</router-link>
 			</div>
@@ -57,13 +58,13 @@
 						</ul>
 						</p>
 						<div class="address">
-							<p><strong>Address: {{bar.address}}</strong></p>			
+							<p>Address: {{bar.address}}</p>			
 							<p v-html="bar.notes" class="barNotes" v-if="bar.notes !== ''">{{bar.notes}}</p>
 						</div>				
 						
 						<div v-if="!user" class="text-center" style="margin-bottom: 50px">
 							<router-link :to="{name: 'PageLogin', query: {redirectTo: $route.path}}">Login</router-link>&nbsp;or&nbsp;
-							<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save a favorite and add notes.
+							<router-link :to="{name: 'PageRegister', query: {redirectTo: $route.path}}">Register</router-link>&nbsp;to save your favorite bars, keep a list of places you'd like to visit, and add notes.
 						</div>
 						<div v-else class="card" style="border: 2px solid #ccc;">
 					 		<div style="padding: 20px;" v-if="!isFavorite">
@@ -255,6 +256,10 @@
 	.wrapper {
 		text-align: center;
 	}
+	.addFlex100Class {
+		flex:80%;
+		-webkit-flex:80%;
+	}
 	a:hover h2 {
 		color: #fff;
 		background: linear-gradient(to right, #000 10%, rgb(9,128,140) 50%, #822357 60%);
@@ -339,7 +344,6 @@
 		width: 67%;
 		font-size: 1.2rem;
 		margin:7% auto;
-		font-weight: 800;
 	}
 	.icon-details {text-align: right;}
 	.favorited {color: red;margin: 3% auto;}
@@ -349,12 +353,12 @@
 	.flex-item.card{
 	  display: flex;
 	  padding: .5rem;
-	  width: 320px;
+	  width: 360px;
 	  height: auto;
 	  border-top-left-radius: 0.25rem;
 	  border-top-right-radius: 0.25rem;
 	}
-	@media (min-width: 540px) {
+	@media (min-width: 1344px) {
 	  .flex-item.card{
 		width: 419px;
 	  }
@@ -372,7 +376,7 @@
 	  flex-direction: column;
 	  justify-content: center;
 	  overflow: hidden;
-	  flex: 0 0 100%;
+	 /* flex: 0 0 100%;*/
 	}
 	.card:hover .card__image {
 	  -webkit-filter: contrast(100%);
@@ -380,7 +384,7 @@
 	}
 	.card__content {
 	  display: flex;
-	  flex: 1 1 auto;
+	  /*flex: 1 1 auto;*/
 	  flex-direction: column;
 	  padding: 0;
 	  text-align: center;
@@ -404,8 +408,12 @@
 	  display: block;
 	  padding-top: 56.25%;
 	}
+	ul.icons {
+		margin:auto auto 4%;
+	}
 	ul.icons li:hover {
 	    background:black;
+	    color: white;
 	}
 	svg.svg-inline--fa:hover {
 	    color:#fff !important;
@@ -419,8 +427,8 @@
 	  }
 	}
 	.card-header {
-		flex: 0 1 100%;
-		-webkit-flex: 1;
+		/*flex: 0 1 100%;
+		-webkit-flex: 100%;*/
 	}
 	.wrapper {
 	  color: #696969;
@@ -430,13 +438,13 @@
 	  text-transform: uppercase;
 	}
 	.card__text {
-	  flex: 1 1 auto;
+	  /*flex: 1 1 auto;*/
 	  font-size: 0.875rem;
 	  line-height: 1.5;
 	  margin-bottom: 1.25rem;
 	}
 	@media (max-width:736px) {
-		.card {width: 320px;margin:4% auto;}
+		.card {width: 360px;margin:4% auto;}
 		.sparkle {
 	        max-width: 100%;    
 	    }

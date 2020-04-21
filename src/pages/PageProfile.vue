@@ -56,7 +56,7 @@
 				user: 'auth/authUser'
 			}),
 			bars () {
-				let bars = Object.values(this.$store.state.bars.items)
+				let bars = Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
 				let user = Object.values(this.user)
 				if (user.barFavorites !== undefined && user.barFavorites !== 'undefined' && user.barToGo !== undefined && user.barToGo !== 'undefined') {
 				// }
@@ -82,13 +82,14 @@
 					// do nothing
 				}
 
-				return Object.values(this.$store.state.bars.items)
+				return Object.values(this.$store.state.bars.items).sort((a, b) => (a.title > b.title) ? 1 : -1)
 			},
 			favorites () {
 				return Object.values(this.$store.state.favorites.items)
 			}
 		},
 		created () {
+			// this.$emit('ready')
 			this.$emit('ready')
 			this.fetchAllBars()
 			this.fetchAllFavorites()

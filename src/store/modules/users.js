@@ -10,21 +10,21 @@ export default {
 		items: {}
 	},
 	getters: {
-		// userFavoritedBars: (state, getters, rootState) => id => {
-		// 	const user = state.items[id]
-		// 	console.log(user)
-		// 	const items = Object.keys(rootState.bars.items)
-		// 	var result = Object.keys(items)
-		// 	.map(key => items[key]) // turn an array of keys into array of items.
-		// 	.filter(item => item.contributors.any(bar => bar.contributor['.key'] === this.user['.key'])) // filter that array,
-		// 	console.log(result)
-		// 	// Object.entries(users).forEach(([key, value]) => console.log(`${key}: ${value}`)) // "foo: bar", "baz: 42"
-		// 	Object.entries(user).forEach(([key, value]) => console.log(`${key}: ${value}`)) // "foo: bar", "baz: 42"
-		// 	if (user.favorites) {
-		// 		return Object.values(rootState.favorites.items)
-		// 		.filter(favorite => favorite.userId === id)
-		// 	}
-		// },
+		userFavoritedBars: (state, getters, rootState) => id => {
+			const user = state.items[id]
+			console.log(user)
+			const items = Object.keys(rootState.bars.items)
+			var result = Object.keys(items)
+			.map(key => items[key]) // turn an array of keys into array of items.
+			.filter(item => item.contributors.any(bar => bar.contributor['.key'] === this.user['.key'])) // filter that array,
+			console.log(result)
+			// Object.entries(users).forEach(([key, value]) => console.log(`${key}: ${value}`)) // "foo: bar", "baz: 42"
+			Object.entries(user).forEach(([key, value]) => console.log(`${key}: ${value}`)) // "foo: bar", "baz: 42"
+			if (user.favorites) {
+				return Object.values(rootState.favorites.items)
+				.filter(favorite => favorite.userId === id)
+			}
+		},
 		userFavoritesCount: (state, getters, rootState) => id => {
 			const user = (state.items[id])
 			if (user.favorites) {

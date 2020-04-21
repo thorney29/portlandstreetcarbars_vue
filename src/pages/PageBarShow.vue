@@ -120,6 +120,7 @@
 				notes: this.bar ? this.bar.notes : '',
 				favoriteValue: this.favorite ? this.favorite.favoriteValue : '',
 				toGoValue: this.favorite ? this.favorite.toGoValue : '',
+				barNotes: this.favorite ? this.favorite.barNotes : '',
 				slug: this.bar ? this.bar.slug : ''
 			}
 		},

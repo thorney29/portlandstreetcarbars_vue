@@ -37,7 +37,7 @@
 				</li>
 				<li class="navbar-item">
 					<router-link
-					:to="{name: 'PageMap'}">
+					:to="{name: 'PageGoogleMap'}">
 					View Bar Map
 				</router-link>
 				</li>

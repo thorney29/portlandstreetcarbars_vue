@@ -159,6 +159,7 @@ export default {
 		},
 		fetchBar: ({dispatch}, {id}) => dispatch('fetchItem', {resource: 'bars', id, emoji: '🔥 📄'}, {root: true}),
 		fetchBars: ({dispatch}, {ids}) => dispatch('fetchItems', {resource: 'bars', emoji: '🌧', ids}, {root: true})
+
 	},
 	mutations: {
 		setBar (state, {bar, barId}) {

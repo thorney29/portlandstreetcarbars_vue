@@ -7,12 +7,20 @@ import router from './router'
 import store from '@/store'
 import AppDate from '@/components/AppDate'
 import vuelidate from 'vuelidate'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 // import css here because it did not work
 import '@/assets/css/style.css'
 import '../node_modules/nprogress/nprogress.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyC7qaErvFSoFYoco-WbWvz1e5U0JE3i1cM',
+    libraries: 'places, directions' // necessary for places input
+  }
+})
 
 Vue.use(vuelidate)
 

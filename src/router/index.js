@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import PageHome from '@/pages/PageHome'
 import PageTypeCategories from '@/pages/PageTypeCategories'
 import PageType from '@/pages/PageType'
-import PageMap from '@/pages/PageMap'
+// import PageMap from '@/pages/PageMap'
 import PageContact from '@/pages/PageContact'
 import PageProfile from '@/pages/PageProfile'
 import PageBarShow from '@/pages/PageBarShow'
@@ -14,7 +14,7 @@ import PageRegister from '@/pages/PageRegister'
 import PageLogin from '@/pages/PageLogin'
 import PageDirections from '@/pages/PageDirections'
 import PageNotFound from '@/pages/PageNotFound'
-
+import PageGoogleMap from '@/pages/PageGoogleMap'
 Vue.use(Router)
 
 const router = new Router({
@@ -94,8 +94,8 @@ const router = new Router({
 		},
 		{
 			path: '/bar-map',
-			name: 'PageMap',
-			component: PageMap,
+			name: 'PageGoogleMap',
+			component: PageGoogleMap,
 			props: true,
 			meta: {
 				title: 'Map of Bars & Restaurants',
@@ -115,6 +115,12 @@ const router = new Router({
 			path: '/contact',
 			name: 'PageContact',
 			component: PageContact,
+			props: true
+		},
+		{
+			path: '/map',
+			name: 'PageGoogleMap',
+			component: PageGoogleMap,
 			props: true
 		},
 		{

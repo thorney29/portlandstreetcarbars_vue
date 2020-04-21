@@ -18,7 +18,6 @@
 	</div>
 </template>
 
-
 <script>
 	import asyncDataStatus from '@/mixins/asyncDataStatus'
 
